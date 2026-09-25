@@ -1,0 +1,1454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Editorial Central — manuscript review flow</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&amp;family=Source+Serif+4:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;color:#1B1F24;background:#F4F5F7}
+a{color:#1D3FCF}a:hover{color:#142C94}
+button{font-family:inherit}
+article p{position:relative}
+.scroll::-webkit-scrollbar{width:8px}.scroll::-webkit-scrollbar-thumb{background:#C9CED6;border-radius:8px}
+</style>
+</helmet>
+
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F5F7; font-family: 'Source Sans 3','Segoe UI',system-ui,sans-serif; color: #1B1F24">
+
+  <!-- Top bar -->
+  <header style="height: 60px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: #FFFFFF; border-bottom: 1px solid #E3E6EB">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <div style="width: 32px; height: 32px; border-radius: 7px; background: #1C6A85; display: flex; align-items: center; justify-content: center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"></path><path d="M9 11h7M9 15h7M9 7h4"></path></svg>
+      </div>
+      <div style="line-height: 1.05">
+        <div style="font-weight: 700; font-size: 14px; letter-spacing: 0.02em">EDITORIAL</div>
+        <div style="font-size: 13px; letter-spacing: 0.04em; color: #3A424C">CENTRAL</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px">
+      <button aria-label="Notifications" style="width: 40px; height: 40px; border: none; background: transparent; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B6470" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>
+      </button>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 6px 8px 6px 14px; border: 1px solid #E3E6EB; border-radius: 8px">
+        <div style="font-weight: 700; font-size: 15px; letter-spacing: 0.06em">ABC PRESS</div>
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #17804F; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">ED</div>
+      </div>
+    </div>
+  </header>
+  <sc-if value="{{isTasks}}" hint-placeholder-val="{{ true }}">
+  <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column">
+
+
+  <main style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 28px 32px">
+    <h1 style="margin: 0 0 14px 0; font-size: 22px">My Tasks</h1>
+    <div role="tablist" aria-label="Task lists" style="display: flex; gap: 8px; border-bottom: 1px solid #E3E6EB; margin-bottom: 16px">
+      <button role="tab" aria-selected="true" style="min-height: 44px; border: none; border-bottom: 3px solid #1D3FCF; background: transparent; padding: 0 12px; font-size: 14px; font-weight: 700; color: #1B1F24; display: flex; align-items: center; gap: 8px; cursor: pointer">Assigned to you <span style="font-size: 12px; font-weight: 700; background: #E8EDFD; color: #142C94; border-radius: 999px; padding: 1px 8px">1</span></button>
+      <button role="tab" aria-selected="false" style="min-height: 44px; border: none; border-bottom: 3px solid transparent; background: transparent; padding: 0 12px; font-size: 14px; font-weight: 500; color: #3A424C; display: flex; align-items: center; gap: 8px; cursor: pointer">Completed <span style="font-size: 12px; font-weight: 700; background: #EEF1F5; color: #3A424C; border-radius: 999px; padding: 1px 8px">0</span></button>
+    </div>
+
+    <section aria-label="Assigned tasks" style="background: #FFFFFF; border: 1px solid #E3E6EB; border-radius: 10px; padding: 16px">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <button style="height: 36px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 12px; font-size: 14px; cursor: pointer">Journal: <strong>All</strong> ▾</button>
+          <button style="height: 36px; border: none; background: transparent; color: #1D3FCF; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h18l-7 8v6l-4 2v-8z"></path></svg>More filters
+          </button>
+        </div>
+        <label style="display: flex; align-items: center; gap: 8px; width: 320px; height: 38px; border: 1px solid #D5DAE1; border-radius: 8px; padding: 0 12px; color: #5B6470">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input aria-label="Search tasks" placeholder="Search by ID, title, or author…" style="flex-grow: 1; border: none; outline: none; font-family: inherit; font-size: 14px; background: transparent">
+        </label>
+      </div>
+      <div style="font-size: 13px; color: #5B6470; margin-bottom: 10px">Showing 1 of 1 task</div>
+
+      <div role="table" aria-label="Tasks" style="border: 1px solid #E3E6EB; border-radius: 8px; overflow: hidden">
+        <div role="row" style="display: grid; grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr) 120px; gap: 12px; padding: 10px 16px; background: #F1F3F6; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #3A424C">
+          <span role="columnheader">Manuscript</span>
+          <span role="columnheader">Journal scope</span>
+          <span role="columnheader">Status</span>
+          <span role="columnheader">In queue</span>
+          <span role="columnheader">Integrity</span>
+          <span role="columnheader">Action</span>
+        </div>
+        <div role="row" style="display: grid; grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr) 120px; gap: 12px; align-items: center; padding: 14px 16px; border-top: 1px solid #E3E6EB; font-size: 14px">
+          <span role="cell" style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+            <span style="font-weight: 600">JO-2026-01178Z-20260518041038</span>
+            <span style="font-size: 13px; color: #3A424C; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">N-Alkylation of Amides with Benzylic Alcohols Catalyzed by a Cationic Ruthenium(II) Complex</span>
+            <span style="font-size: 12px; color: #5B6470">ABC Journal of Inorganic Chemistry</span>
+          </span>
+          <span role="cell" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #7A4A00">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12h9"></path></svg>Partial fit
+          </span>
+          <span role="cell"><span style="{{taskStatusStyle}}">{{taskStatus}}</span></span>
+          <span role="cell" style="color: #3A424C">8d 7h</span>
+          <span role="cell" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #A1180F">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"></path></svg>3 issues
+          </span>
+          <span role="cell">
+            <button onClick="{{goIntegrity}}" style="border: none; background: transparent; padding: 0; cursor: pointer; font: inherit; display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 18px; border-radius: 8px; background: #1D3FCF; color: #FFFFFF; font-size: 14px; font-weight: 600; text-decoration: none">Review</button>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  </div>
+  </sc-if>
+
+  <sc-if value="{{isIntegrity}}" hint-placeholder-val="{{ false }}">
+  <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column">
+
+
+  <!-- Breadcrumb -->
+  <div style="height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px">
+    <nav aria-label="Breadcrumb" style="display: flex; align-items: center; gap: 8px; font-size: 14px">
+      <button onClick="{{goTasks}}" style="border: none; background: transparent; padding: 0; cursor: pointer; font: inherit; color: #5B6470; text-decoration: none">My Tasks</button>
+      <span style="color: #9AA1AB">/</span>
+      <span style="font-weight: 600">JO-2026-01178Z-20260518041038</span>
+      <span style="color: #9AA1AB">/</span>
+      <span style="font-size: 14px; font-weight: 600; color: #1D3FCF">1. Integrity Checks</span>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 20px">
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5B6470">
+        <span style="font-weight: 700; color: #1D3FCF">1 Integrity</span><span>›</span><span>2 Editorial Assessment</span>
+      </div>
+      <button aria-expanded="{{ig.msOpenStr}}" onClick="{{ig.toggleMs}}" style="height: 36px; border: none; background: transparent; color: #1D3FCF; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 0 4px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"></path><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"></path></svg>
+        {{ig.msLabel}}
+      </button>
+    </div>
+  </div>
+
+  <main class="scroll" style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 0 24px 24px 24px">
+    <div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px">
+
+      <!-- Summary -->
+      <section style="background: #FFFFFF; border: 1px solid #E3E6EB; border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px">
+        <div style="display: flex; align-items: center; gap: 14px">
+          <span style="width: 44px; height: 44px; border-radius: 50%; background: #FDEDEC; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A1180F" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 3 2 20h20z"></path><path d="M12 10v4M12 17h.01"></path></svg>
+          </span>
+          <div>
+            <h1 style="margin: 0; font-size: 20px">{{ig.headline}}</h1>
+            <div style="font-size: 14px; color: #3A424C">{{ig.subline}}</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <sc-for list="{{ig.progress}}" as="p" hint-placeholder-count="3">
+            <span style="{{p.style}}">{{p.label}}</span>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
+        <div role="group" aria-label="Show checks" style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{ig.filters}}" as="f" hint-placeholder-count="5">
+            <button aria-pressed="{{f.pressed}}" onClick="{{f.pick}}" style="{{f.style}}">{{f.label}} <span style="{{f.countStyle}}">{{f.count}}</span></button>
+          </sc-for>
+        </div>
+        <label style="display: flex; align-items: center; gap: 8px; width: 300px; height: 38px; border: 1px solid #D5DAE1; border-radius: 8px; padding: 0 12px; color: #5B6470; background: #FFFFFF">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input aria-label="Search checks" placeholder="Search checks…" style="flex-grow: 1; border: none; outline: none; font-family: inherit; font-size: 14px; background: transparent">
+        </label>
+      </div>
+
+      <!-- Issues -->
+      <sc-if value="{{ig.showIssues}}" hint-placeholder-val="{{ true }}">
+        <section aria-label="Issues" style="display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-size: 15px; display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #C4201A"></span>Flagged concerns <span style="font-weight: 500; color: #5B6470">· for your information — included in any author query</span></h2>
+          <sc-for list="{{ig.issues}}" as="i" hint-placeholder-count="3">
+            <article style="{{i.cardStyle}}">
+              <button aria-expanded="{{i.expanded}}" onClick="{{i.toggle}}" style="width: 100%; border: none; background: transparent; padding: 14px 16px; display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; align-items: center; gap: 14px; text-align: left; cursor: pointer; color: #1B1F24">
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #5B6470">{{i.cat}}</span>
+                <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                  <span style="font-size: 15px; font-weight: 700">{{i.check}}</span>
+                  <span style="font-size: 13px; color: #3A424C">{{i.subject}}</span>
+                </span>
+                <span style="display: flex; align-items: center; gap: 10px">
+                  <span style="{{i.statusStyle}}">{{i.status}}</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3A424C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{i.chevron}}"></path></svg>
+                </span>
+              </button>
+              <sc-if value="{{i.open}}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 0 16px 16px 140px; display: flex; flex-direction: column; gap: 10px">
+                  <div style="font-size: 14px; line-height: 1.55; color: {{i.textInk}}"><strong>Found:</strong> {{i.found}}</div>
+                  <div style="font-size: 13px; line-height: 1.5; color: #3A424C"><strong>Why it matters:</strong> {{i.why}}</div>
+                  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 2px">
+                    <button aria-pressed="{{i.unflagPressed}}" onClick="{{i.toggleFlag}}" style="{{i.flagBtnStyle}}">{{i.flagBtnLabel}}</button>
+                    <span style="font-size: 12px; color: #5B6470">{{i.flagHint}}</span>
+                  </div>
+                  <sc-if value="{{i.unflagged}}" hint-placeholder-val="{{ false }}">
+                    <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #3A424C">Why isn't this a concern? <span style="color: #5B6470">(optional, kept in the audit trail)</span>
+                      <input placeholder="e.g. ORCID confirmed by email with the author" style="height: 36px; border: 1px solid #C9CED6; border-radius: 6px; padding: 0 10px; font-family: inherit; font-size: 13px; color: #1B1F24">
+                    </label>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </article>
+          </sc-for>
+        </section>
+      </sc-if>
+
+
+      <!-- Passed -->
+      <sc-if value="{{ig.showPassed}}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Passed checks" style="display: flex; flex-direction: column; gap: 8px">
+          <h2 style="margin: 0; font-size: 15px; display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #1E8A55"></span>Passed</h2>
+          <div style="background: #FFFFFF; border: 1px solid #E3E6EB; border-radius: 10px">
+            <sc-for list="{{ig.passed}}" as="p" hint-placeholder-count="3">
+              <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid #EEF0F3; font-size: 14px">
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #5B6470">{{p.cat}}</span>
+                <span>{{p.text}}</span>
+                <span style="font-size: 12px; font-weight: 600; color: #17603C; background: #E6F4EC; border-radius: 999px; padding: 2px 10px">Clear</span>
+              </div>
+            </sc-for>
+            <div style="padding: 10px 16px; font-size: 13px; color: #5B6470">+56 more passed checks — [from integrity report]</div>
+          </div>
+        </section>
+      </sc-if>
+
+      <!-- Hidden groups, shown only in the default view -->
+      <sc-if value="{{ig.showHiddenHints}}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <button onClick="{{ig.showPass}}" style="min-height: 48px; border: 1px dashed #C9CED6; background: #FFFFFF; border-radius: 10px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: #3A424C; cursor: pointer">
+            <span><strong style="color: #1B1F24">59 passed checks</strong> hidden · includes image integrity and 37 citations</span><span style="color: #1D3FCF; font-weight: 600">Show</span>
+          </button>
+        </div>
+      </sc-if>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="height: 64px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: #FFFFFF; border-top: 1px solid #E3E6EB">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <button aria-label="Editor notes" style="width: 40px; height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A424C" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"></path><path d="m15 18 5-5"></path></svg>
+      </button>
+      <button aria-label="Comments" style="width: 40px; height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A424C" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"></path></svg>
+      </button>
+      <span style="margin-left: 8px; font-size: 13px; color: #5B6470">{{ig.footerNote}}</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px">
+      <button onClick="{{goAssessment}}" style="border: none; background: transparent; padding: 0; cursor: pointer; font: inherit; height: 44px; display: inline-flex; align-items: center; gap: 8px; background: #FFFFFF; color: #1D3FCF; border: 1px solid #1D3FCF; box-sizing: border-box; border-radius: 8px; padding: 0 16px; font-size: 15px; font-weight: 600; text-decoration: none">Next: Editorial Assessment
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+      </button>
+      <button onClick="{{ig.openQuery}}" style="height: 44px; border: none; background: #1D3FCF; color: #FFFFFF; border-radius: 8px; padding: 0 18px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3z"></path><path d="m3 6 9 7 9-7"></path></svg>Query Author</button>
+    </div>
+  </footer>
+  <!-- Manuscript drawer -->
+  <sc-if value="{{ig.msOpen}}" hint-placeholder-val="{{ false }}">
+    <aside aria-label="Manuscript" style="position: absolute; top: 108px; right: 0; bottom: 64px; width: 760px; z-index: 25; background: #FFFFFF; border-left: 1px solid #D5DAE1; box-shadow: -12px 0 32px rgba(20, 28, 40, 0.14); display: flex; flex-direction: column">
+      <div style="height: 52px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 20px; background: #F7F8FA; border-bottom: 1px solid #E3E6EB">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D3FCF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"></path><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"></path></svg>
+          Manuscript
+        </div>
+        <button aria-label="Close manuscript" onClick="{{ig.toggleMs}}" style="width: 36px; height: 36px; border: none; background: transparent; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A424C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+        </button>
+      </div>
+      <div class="scroll" style="flex-grow: 1; overflow-y: auto; padding: 32px 40px 56px 40px">
+        <article style="max-width: 740px; margin: 0 auto; font-family: 'Source Serif 4',Georgia,serif; font-size: 17px; line-height: 1.75; color: #1B1F24">
+          <h1 style="font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 32px; line-height: 1.2; text-align: center; color: #1D3FCF; margin: 0 0 20px 0">N-Alkylation of Amides with Benzylic Alcohols Catalyzed by a Cationic Ruthenium(II) Complex</h1>
+          <p style="text-align: center; font-style: italic; margin: 0">Tapas Mahata and Manish Bhattacharjee*</p>
+          <p style="text-align: center; font-size: 15px; color: #5B6470; margin: 4px 0 32px 0">Department of Chemistry, Indian Institute of Technology Kharagpur 721 302, India</p>
+
+          <h2 id="ms-abstract" style="font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B6470; margin: 0 0 8px 0">Abstract</h2>
+          <p style="margin: 0 0 28px 0">A ruthenium(II) compound, [(η<sup>6</sup>-<i>p</i>-cymene)Ru(bpm)Cl]<sup>+</sup>[PF<sub>6</sub>]<sup>−</sup> (<b>1</b>) {bpm = bis(3,5-dimethylpyrazolyl)methane} has been synthesized and structurally characterized. The compound crystallizes in monoclinic space group P2<sub>1</sub>. The compound catalyzes N-alkylation of aromatic amides with benzylic alcohols in the presence of Cs<sub>2</sub>CO<sub>3</sub> in toluene at 120 °C with very good to excellent conversions.</p>
+
+          <h2 id="ms-intro" style="font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B6470; margin: 0 0 8px 0">Introduction</h2>
+          <p id="ms-rp" style="margin: 0 0 28px 0"><span>Traditionally, the synthesis of amides involves the condensation of carboxylic acids or their derivatives (such as acid chlorides, anhydrides, and esters) with amines.</span><sup>10</sup> In addition, aryl and alkenyl halides were also employed as alkylating agents for the N-alkylation of amide,<sup>11</sup> which often necessitated the use of stoichiometric amounts of base, generated halide by-products, and required elevated temperatures, thus presenting environmental and practical challenges. To overcome these limitations, the use of alcohols as alkylating agents for N-alkylation of amines and amides has emerged as a more sustainable alternative.<sup>12</sup> <span style="color: #9AA1AB">[…]</span> <span id="ms-gap">However, the hydroxyl group of alcohols is a poor leaving group. Thus, the use of alcohols as alkylating agents is challenging and requires the use of transition-metal catalysts.</span><sup>13</sup></p>
+
+          <h2 id="ms-results" style="font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B6470; margin: 0 0 8px 0">Results and discussion</h2>
+          <p style="margin: 0 0 20px 0"><span id="ms-n1">Thus, the compound, [(η<sup>6</sup>-<i>p</i>-cymene)Ru(bpm)Cl]<sup>+</sup>[PF<sub>6</sub>]<sup>−</sup>(1) has been synthesized from the reaction of [(η<sup>6</sup>-<i>p</i>-</span><span style="color: #9AA1AB">[…]</span></p>
+          <p style="margin: 0 0 20px 0"><span id="ms-m1">The reaction between benzamide (2a) and benzyl alcohol (3a) was chosen as a model reaction.</span> <span style="color: #9AA1AB">[…]</span> <span id="ms-n2">The reaction performed in the presence of 1 mol% of 1 in toluene for 16 h afforded N-benzylbenzamide (4a) in 67% yield (Entry 1, Table 1).</span> <span id="ms-m4">Reducing the catalyst loading to 0.5 mol% of 1 resulted in a significant decrease in yield to 20% (Entry 2, Table 1).</span> <span id="ms-m5">Increasing the catalyst loading to 1.5 mol% markedly improved the conversion (95%) (Entry 3, Table 1).</span></p>
+          <p style="margin: 0 0 20px 0"><span id="ms-m3">We studied the effect of solvent on 1-catalyzed N-alkylation, and the results are</span> <span style="color: #9AA1AB">[…]</span></p>
+          <p style="margin: 0 0 20px 0"><span id="ms-n3">The reaction of acetamide with benzyl alcohol did not afford any product. Similarly, we could not isolate any</span> <span style="color: #9AA1AB">[…]</span></p>
+          <p style="margin: 0 0 20px 0"><span id="ms-s1">After exploring the reaction's substrate scope, we decided to apply the methodology developed for the synthes</span><span style="color: #9AA1AB">[…]</span></p>
+          <p style="margin: 24px 0 0 0; font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 13px; color: #6A717C">[…] marks text not reproduced in this mock.</p>
+        </article>
+      </div>
+    </aside>
+  </sc-if>
+
+  <sc-if value="{{ig.queryOpen}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; z-index: 40; background: rgba(27, 31, 36, 0.40); display: flex; align-items: center; justify-content: center; padding: 24px">
+      <sc-if value="{{ig.querySent}}" hint-placeholder-val="{{ false }}">
+        <div role="dialog" aria-label="Query sent" style="width: 440px; background: #FFFFFF; border-radius: 14px; box-shadow: 0 20px 48px rgba(20, 28, 40, 0.28); padding: 28px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+          <span style="width: 48px; height: 48px; border-radius: 50%; background: #E6F4EC; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#17603C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></span>
+          <div style="font-size: 18px; font-weight: 700">Query sent to the author</div>
+          <div style="font-size: 14px; color: #3A424C">The task is on hold until the author responds.</div>
+          <button onClick="{{goTasks}}" style="border: none; background: transparent; padding: 0; cursor: pointer; font: inherit; margin-top: 8px; height: 42px; display: inline-flex; align-items: center; background: #1D3FCF; color: #FFFFFF; border-radius: 8px; padding: 0 18px; font-size: 14px; font-weight: 600; text-decoration: none">Back to My Tasks</button>
+          <button onClick="{{ig.closeQuery}}" style="border: none; background: transparent; color: #5B6470; font-size: 12px; cursor: pointer; padding: 6px">Reset demo</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ig.queryDraft}}" hint-placeholder-val="{{ true }}">
+        <div role="dialog" aria-label="Query author email" style="width: 760px; max-height: 100%; background: #FFFFFF; border-radius: 14px; box-shadow: 0 20px 48px rgba(20, 28, 40, 0.28); display: flex; flex-direction: column">
+          <div style="flex-shrink: 0; padding: 18px 24px 10px 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: #5B6470">Query author</div>
+              <h2 style="margin: 4px 0 0 0; font-size: 20px">Integrity concern — clarification required</h2>
+            </div>
+            <span style="font-size: 12px; font-weight: 600; color: #5B2DB3; background: #F1EBFD; border-radius: 999px; padding: 3px 10px; white-space: nowrap">Pre-filled · editable</span>
+          </div>
+          <div class="scroll" style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 4px 24px 12px 24px; display: flex; flex-direction: column; gap: 10px">
+            <div style="font-size: 13px; line-height: 1.45; color: #17603C; background: #EAF6EF; border: 1px solid #B9DEC9; border-radius: 8px; padding: 8px 12px">{{ig.includedNote}}</div>
+            <div style="display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: center; gap: 8px 12px; font-size: 14px">
+              <span style="color: #5B6470; font-weight: 600">To</span>
+              <span style="justify-self: start; background: #EEF1F5; border-radius: 999px; padding: 4px 12px">Manish Bhattacharjee · mxb@iitkgp.ac.in <span style="font-size: 12px; color: #5B6470">(corresponding author)</span></span>
+              <label for="q-subject" style="color: #5B6470; font-weight: 600">Subject</label>
+              <input id="q-subject" value="{{ig.qSubject}}" onInput="{{ig.onQSubject}}" style="height: 38px; border: 1px solid #C9CED6; border-radius: 8px; padding: 0 12px; font-family: inherit; font-size: 14px; color: #1B1F24">
+            </div>
+            <label for="q-body" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Email body</label>
+            <textarea id="q-body" rows="18" value="{{ig.qBody}}" onInput="{{ig.onQBody}}" style="width: 100%; box-sizing: border-box; resize: vertical; border: 1px solid #C9CED6; border-radius: 8px; padding: 12px 14px; font-family: inherit; font-size: 14px; line-height: 1.55; color: #1B1F24"></textarea>
+          </div>
+          <div style="flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 14px 24px 18px 24px; border-top: 1px solid #E3E6EB">
+            <button onClick="{{ig.closeQuery}}" style="height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 14px; font-size: 14px; cursor: pointer">Cancel</button>
+            <button onClick="{{ig.sendQuery}}" style="height: 40px; border: none; background: #1D3FCF; color: #FFFFFF; border-radius: 6px; padding: 0 16px; font-size: 14px; font-weight: 600; cursor: pointer">Send query</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  </div>
+  </sc-if>
+
+  <sc-if value="{{isAssessment}}" hint-placeholder-val="{{ false }}">
+  <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column">
+
+
+  <!-- Breadcrumb -->
+  <div style="height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px">
+    <nav aria-label="Breadcrumb" style="display: flex; align-items: center; gap: 8px; font-size: 14px">
+      <button onClick="{{goTasks}}" style="border: none; background: transparent; padding: 0; cursor: pointer; font: inherit; color: #5B6470; text-decoration: none">My Tasks</button>
+      <span style="color: #9AA1AB">/</span>
+      <span style="font-weight: 600">JO-2026-01178Z-20260518041038</span>
+      <span style="color: #9AA1AB">/</span>
+      <button style="border: none; background: transparent; padding: 0; font-size: 14px; font-weight: 600; color: #1D3FCF; display: flex; align-items: center; gap: 4px; cursor: pointer">2. Editorial Assessment
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+      </button>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #5B6470">
+      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: {{band.dot}}"></span>
+      <span>Scope: <strong style="color: #1B1F24">{{band.label}}</strong></span>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div style="flex-grow: 1; min-height: 0; display: flex; gap: 16px; padding: 0 24px 16px 24px">
+
+    <!-- Contents: left side, collapsible -->
+    <sc-if value="{{tocPanelOpen}}" hint-placeholder-val="{{ true }}">
+      <nav aria-label="Table of contents" style="width: 264px; flex-shrink: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E3E6EB; border-radius: 10px; overflow: hidden">
+        <div style="height: 52px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 8px 0 16px; border-bottom: 1px solid #E3E6EB">
+          <h2 style="margin: 0; font-size: 15px">Contents</h2>
+          <button aria-label="Collapse contents" onClick="{{toggleTocPanel}}" style="width: 36px; height: 36px; border: none; background: transparent; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A424C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+          </button>
+        </div>
+        <div class="scroll" style="flex-grow: 1; overflow-y: auto; padding: 10px">
+          <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B6470; padding: 4px 8px">Sections</div>
+          <sc-for list="{{sections}}" as="sec" hint-placeholder-count="3">
+            <a href="{{sec.href}}" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 38px; padding: 0 8px; border-radius: 6px; text-decoration: none; color: #1B1F24; font-size: 14px; font-weight: 600">{{sec.label}}<sc-if value="{{sec.ev}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 500; color: #5B6470; white-space: nowrap">{{sec.ev}}</span></sc-if></a>
+          </sc-for>
+          <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B6470; padding: 14px 8px 4px 8px">Figures, schemes and tables</div>
+          <sc-for list="{{figures}}" as="fig" hint-placeholder-count="6">
+            <button style="display: flex; flex-direction: column; gap: 1px; width: 100%; text-align: left; border: none; background: transparent; padding: 7px 8px; border-radius: 6px; font-size: 13px; line-height: 1.4; color: #1B1F24; cursor: pointer">
+              <span style="font-weight: 600">{{fig.id}}</span>
+              <span style="color: #3A424C">{{fig.caption}}</span>
+              <sc-if value="{{fig.warn}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; color: #8A4B00">{{fig.warn}}</span></sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </nav>
+    </sc-if>
+    <sc-if value="{{tocPanelClosed}}" hint-placeholder-val="{{ false }}">
+      <div style="width: 56px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding: 8px 0; background: #FFFFFF; border: 1px solid #E3E6EB; border-radius: 10px">
+        <button aria-label="Expand contents" title="Contents" onClick="{{toggleTocPanel}}" style="width: 44px; height: 44px; border: none; background: #F1F3F6; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B1F24" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></svg>
+        </button>
+      </div>
+    </sc-if>
+
+    <!-- Manuscript -->
+    <section aria-label="Manuscript" style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E3E6EB; border-radius: 10px; overflow: hidden">
+      <div style="height: 52px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: #F7F8FA; border-bottom: 1px solid #E3E6EB">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px">
+          <sc-if value="{{activeLabel}}" hint-placeholder-val="{{ false }}">
+            <span style="font-weight: 500; font-size: 12px; color: #6A3E00; background: #FFF1CC; border-radius: 999px; padding: 3px 10px">Showing: {{activeLabel}}</span>
+            <button onClick="{{clearActive}}" style="border: none; background: transparent; color: #1D3FCF; font-size: 12px; cursor: pointer; padding: 4px">Clear</button>
+          </sc-if>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <button style="height: 32px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 10px; font-size: 13px; cursor: pointer">Aa Medium</button>
+          <button style="height: 32px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 10px; font-size: 13px; cursor: pointer">100%</button>
+        </div>
+      </div>
+
+      <div class="scroll" style="flex-grow: 1; overflow-y: auto; padding: 40px 48px 64px 48px">
+        <article style="max-width: 740px; margin: 0 auto; font-family: 'Source Serif 4',Georgia,serif; font-size: 17px; line-height: 1.75; color: #1B1F24">
+          <h1 style="font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 32px; line-height: 1.2; text-align: center; color: #1D3FCF; margin: 0 0 20px 0">N-Alkylation of Amides with Benzylic Alcohols Catalyzed by a Cationic Ruthenium(II) Complex</h1>
+          <p style="text-align: center; font-style: italic; margin: 0">Tapas Mahata and Manish Bhattacharjee*</p>
+          <p style="text-align: center; font-size: 15px; color: #5B6470; margin: 4px 0 32px 0">Department of Chemistry, Indian Institute of Technology Kharagpur 721 302, India</p>
+
+          <h2 id="ms-abstract" style="font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B6470; margin: 0 0 8px 0">Abstract</h2>
+          <p style="margin: 0 0 28px 0">A ruthenium(II) compound, [(η<sup>6</sup>-<i>p</i>-cymene)Ru(bpm)Cl]<sup>+</sup>[PF<sub>6</sub>]<sup>−</sup> (<b>1</b>) {bpm = bis(3,5-dimethylpyrazolyl)methane} has been synthesized and structurally characterized. The compound crystallizes in monoclinic space group P2<sub>1</sub>. The compound catalyzes N-alkylation of aromatic amides with benzylic alcohols in the presence of Cs<sub>2</sub>CO<sub>3</sub> in toluene at 120 °C with very good to excellent conversions.</p>
+
+          <h2 id="ms-intro" style="font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B6470; margin: 0 0 8px 0">Introduction</h2>
+          <p id="ms-rp" style="margin: 0 0 28px 0"><span style="{{hl.rp}}">Traditionally, the synthesis of amides involves the condensation of carboxylic acids or their derivatives (such as acid chlorides, anhydrides, and esters) with amines.</span><sup>10</sup> In addition, aryl and alkenyl halides were also employed as alkylating agents for the N-alkylation of amide,<sup>11</sup> which often necessitated the use of stoichiometric amounts of base, generated halide by-products, and required elevated temperatures, thus presenting environmental and practical challenges. To overcome these limitations, the use of alcohols as alkylating agents for N-alkylation of amines and amides has emerged as a more sustainable alternative.<sup>12</sup> <span style="color: #9AA1AB">[…]</span> <span id="ms-gap" style="{{hl.gap}}">However, the hydroxyl group of alcohols is a poor leaving group. Thus, the use of alcohols as alkylating agents is challenging and requires the use of transition-metal catalysts.</span><sup>13</sup></p>
+
+          <h2 id="ms-results" style="font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B6470; margin: 0 0 8px 0">Results and discussion</h2>
+          <p style="margin: 0 0 20px 0"><span id="ms-n1" style="{{hl.n1}}"><span aria-label="Evidence markers" style="position: absolute; right: -42px; width: 24px; margin-top: 3px; line-height: 1"><button aria-label="Novelty evidence" title="Novelty" onClick="{{mk.n1}}" style="{{mks.n1}}">N</button></span>Thus, the compound, [(η<sup>6</sup>-<i>p</i>-cymene)Ru(bpm)Cl]<sup>+</sup>[PF<sub>6</sub>]<sup>−</sup>(1) has been synthesized from the reaction of [(η<sup>6</sup>-<i>p</i>-</span><span style="color: #9AA1AB">[…]</span></p>
+          <p style="margin: 0 0 20px 0"><span id="ms-m1" style="{{hl.m1}}"><span aria-label="Evidence markers" style="position: absolute; right: -42px; width: 24px; margin-top: 3px; line-height: 1"><button aria-label="Methodology evidence" title="Methodology" onClick="{{mk.m1}}" style="{{mks.m1}}">M</button></span>The reaction between benzamide (2a) and benzyl alcohol (3a) was chosen as a model reaction.</span> <span style="color: #9AA1AB">[…]</span> <span id="ms-n2" style="{{hl.n2}}"><span aria-label="Evidence markers" style="position: absolute; right: -42px; width: 24px; margin-top: 3px; line-height: 1"><button aria-label="Novelty evidence" title="Novelty" onClick="{{mk.n2}}" style="{{mks.n2}}">N</button><button aria-label="Methodology evidence" title="Methodology" onClick="{{mk.m2}}" style="{{mks.m2}}">M</button></span>The reaction performed in the presence of 1 mol% of 1 in toluene for 16 h afforded N-benzylbenzamide (4a) in 67% yield (Entry 1, Table 1).</span> <span id="ms-m4" style="{{hl.m4}}"><span aria-label="Evidence markers" style="position: absolute; right: -42px; width: 24px; margin-top: 3px; line-height: 1"><button aria-label="Methodology evidence" title="Methodology" onClick="{{mk.m4}}" style="{{mks.m4}}">M</button></span>Reducing the catalyst loading to 0.5 mol% of 1 resulted in a significant decrease in yield to 20% (Entry 2, Table 1).</span> <span id="ms-m5" style="{{hl.m5}}"><span aria-label="Evidence markers" style="position: absolute; right: -42px; width: 24px; margin-top: 3px; line-height: 1"><button aria-label="Methodology evidence" title="Methodology" onClick="{{mk.m5}}" style="{{mks.m5}}">M</button></span>Increasing the catalyst loading to 1.5 mol% markedly improved the conversion (95%) (Entry 3, Table 1).</span></p>
+          <p style="margin: 0 0 20px 0"><span id="ms-m3" style="{{hl.m3}}"><span aria-label="Evidence markers" style="position: absolute; right: -42px; width: 24px; margin-top: 3px; line-height: 1"><button aria-label="Methodology evidence" title="Methodology" onClick="{{mk.m3}}" style="{{mks.m3}}">M</button></span>We studied the effect of solvent on 1-catalyzed N-alkylation, and the results are</span> <span style="color: #9AA1AB">[…]</span></p>
+          <p style="margin: 0 0 20px 0"><span id="ms-n3" style="{{hl.n3}}"><span aria-label="Evidence markers" style="position: absolute; right: -42px; width: 24px; margin-top: 3px; line-height: 1"><button aria-label="Novelty evidence" title="Novelty" onClick="{{mk.n3}}" style="{{mks.n3}}">N</button></span>The reaction of acetamide with benzyl alcohol did not afford any product. Similarly, we could not isolate any</span> <span style="color: #9AA1AB">[…]</span></p>
+          <p style="margin: 0 0 20px 0"><span id="ms-s1" style="{{hl.s1}}"><span aria-label="Evidence markers" style="position: absolute; right: -42px; width: 24px; margin-top: 3px; line-height: 1"><button aria-label="Significance evidence" title="Significance" onClick="{{mk.s1}}" style="{{mks.s1}}">S</button></span>After exploring the reaction's substrate scope, we decided to apply the methodology developed for the synthes</span><span style="color: #9AA1AB">[…]</span></p>
+          <p style="margin: 24px 0 0 0; font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 13px; color: #6A717C">[…] marks text not reproduced in this mock.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Right panel: collapsed rail -->
+    <sc-if value="{{closed}}" hint-placeholder-val="{{ false }}">
+      <aside aria-label="Assessment panel (collapsed)" style="width: 56px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 0; background: #FFFFFF; border: 1px solid #E3E6EB; border-radius: 10px">
+        <button aria-label="Expand assessment panel" onClick="{{openPanel}}" style="width: 44px; height: 44px; border: none; background: #F1F3F6; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+        </button>
+        <div style="width: 28px; height: 1px; background: #E3E6EB; margin: 4px 0"></div>
+        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+          <button aria-label="{{t.full}}" title="{{t.full}}" onClick="{{t.openTo}}" style="position: relative; width: 44px; height: 44px; border: none; background: transparent; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #3A424C">
+            <sc-if value="{{t.isScope}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1.2"></circle></svg><span style="position: absolute; top: 8px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: {{band.dot}}; border: 2px solid #FFFFFF"></span></sc-if>
+            <sc-if value="{{t.isSnap}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg></sc-if>
+            <sc-if value="{{t.isEv}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5M8 11h6M11 8v6"></path></svg></sc-if>
+            <sc-if value="{{t.isToc}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></svg></sc-if>
+          </button>
+        </sc-for>
+      </aside>
+    </sc-if>
+
+    <!-- Right panel: expanded -->
+    <sc-if value="{{open}}" hint-placeholder-val="{{ true }}">
+      <button aria-label="Resize assessment panel. Drag, or use left and right arrow keys. Double-click to reset." title="Drag to resize · double-click to reset" onPointerDown="{{dragStart}}" onPointerMove="{{dragMove}}" onPointerUp="{{dragEnd}}" onPointerCancel="{{dragEnd}}" onKeyDown="{{resizeKey}}" onDoubleClick="{{resetWidth}}" style="{{handleStyle}}">
+        <span style="{{gripStyle}}"></span>
+      </button>
+      <aside aria-label="Assessment panel" style="width: {{panelW}}; flex-shrink: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E3E6EB; border-radius: 10px; overflow: hidden">
+        <div style="flex-shrink: 0; display: flex; align-items: stretch; border-bottom: 1px solid #E3E6EB">
+          <div role="tablist" aria-label="Assessment views" style="flex-grow: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+            <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+              <button role="tab" aria-selected="{{t.selected}}" title="{{t.full}}" onClick="{{t.pick}}" style="{{t.style}}">
+                <span style="display: flex; align-items: center; gap: 6px">
+                  <sc-if value="{{t.isScope}}" hint-placeholder-val="{{ false }}"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{band.dot}}; display: inline-block"></span></sc-if>
+                  {{t.short}}
+                  <sc-if value="{{t.count}}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; font-weight: 600; background: #EEF1F5; color: #3A424C; border-radius: 999px; padding: 1px 7px">{{t.count}}</span></sc-if>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+          <button aria-label="Collapse assessment panel" onClick="{{closePanel}}" style="width: 48px; flex-shrink: 0; border: none; border-left: 1px solid #E3E6EB; background: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A424C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+          </button>
+        </div>
+
+        <div class="scroll" style="flex-grow: 1; overflow-y: auto; padding: 20px 20px 28px 20px">
+
+          <!-- ===== SCOPE ===== -->
+          <sc-if value="{{isScope}}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; gap: 16px">
+              <div style="display: flex; align-items: baseline; justify-content: space-between">
+                <h2 style="margin: 0; font-size: 18px">Scope</h2>
+                <span style="font-size: 12px; color: #5B6470">Evaluated 24 Sep 2026 · snapshot</span>
+              </div>
+
+              <div style="border-radius: 10px; padding: 16px; background: {{band.soft}}; border: 1px solid {{band.line}}; display: flex; flex-direction: column; gap: 10px">
+                <div style="display: flex; flex-direction: column; gap: 10px">
+                  <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px 6px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid {{band.line}}; color: {{band.ink}}; font-size: 17px; font-weight: 700; line-height: 1.2">
+                    <sc-if value="{{band.isGreen}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{band.ink}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m7.5 12.5 3 3 6-6.5"></path></svg></sc-if>
+                    <sc-if value="{{band.isAmber}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{band.ink}}" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12h9"></path></svg></sc-if>
+                    <sc-if value="{{band.isRed}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{band.ink}}" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"></path></svg></sc-if>
+                    {{band.label}}
+                  </span>
+                  <div style="min-width: 0">
+                    <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: #5B6470">Submitted journal</div>
+                    <div style="font-size: 16px; font-weight: 700; line-height: 1.3; color: #1B1F24">{{band.journal}}</div>
+                  </div>
+                </div>
+                <p style="margin: 0; font-size: 14px; line-height: 1.5">{{band.summary}}</p>
+                <sc-if value="{{band.isRed}}" hint-placeholder-val="{{ false }}">
+                  <p style="margin: 0; font-size: 13px; font-weight: 600; color: {{band.ink}}">This manuscript does not fit the submitted journal's scope.</p>
+                </sc-if>
+              </div>
+
+              <div style="border: 1px solid #E3E6EB; border-radius: 10px">
+                <button aria-expanded="{{bdOpenStr}}" onClick="{{toggleBreakdown}}" style="width: 100%; border: none; background: #F7F8FA; border-radius: 10px; padding: 12px 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; text-align: left; cursor: pointer; color: #1B1F24">
+                  <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                    <span style="font-size: 14px; font-weight: 700">{{band.why}}</span>
+                    <sc-if value="{{bdClosed}}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; line-height: 1.45; color: #3A424C">{{bdSummary}}</span></sc-if>
+                  </span>
+                  <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #1D3FCF; white-space: nowrap">{{bdHint}}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{bdChevron}}"></path></svg>
+                  </span>
+                </button>
+                <sc-if value="{{bdOpen}}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; flex-direction: column">
+                    <sc-for list="{{band.signals}}" as="s" hint-placeholder-count="3">
+                      <div style="padding: 14px; border-top: 1px solid #E3E6EB; display: flex; flex-direction: column; gap: 8px">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+                          <div style="font-size: 14px; font-weight: 600">{{s.name}} <span style="font-weight: 400; color: #5B6470; font-size: 12px">· {{s.weight}}</span></div>
+                          <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: {{s.ink}}; background: {{s.soft}}; border-radius: 999px; padding: 3px 10px; white-space: nowrap">
+                            <sc-if value="{{s.isPass}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></sc-if>
+                            <sc-if value="{{s.isPartial}}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12h14"></path></svg></sc-if>
+                            <sc-if value="{{s.isFail}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></sc-if>
+                            {{s.statusLabel}}
+                          </span>
+                        </div>
+                        <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3A424C">{{s.reason}}</p>
+                        <sc-if value="{{s.chips}}" hint-placeholder-val="{{ false }}">
+                          <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                            <sc-for list="{{s.chips}}" as="c" hint-placeholder-count="4">
+                              <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; border-radius: 6px; padding: 3px 8px; border: 1px solid {{c.line}}; color: {{c.ink}}; background: {{c.bg}}">
+                                <sc-if value="{{c.matched}}" hint-placeholder-val="{{ true }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></sc-if>
+                                <sc-if value="{{c.unmatched}}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></sc-if>
+                                {{c.label}}
+                              </span>
+                            </sc-for>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{s.toc}}" hint-placeholder-val="{{ false }}">
+                          <div style="border: 1px solid #E3E6EB; border-radius: 8px; overflow: hidden">
+                            <sc-for list="{{s.toc}}" as="a" hint-placeholder-count="3">
+                              <div style="position: relative; display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; padding: 8px 10px; border-bottom: 1px solid #EEF0F3; font-size: 13px">
+                                <span style="color: #5B6470">{{a.date}}</span>
+                                <a href="{{a.href}}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: baseline; gap: 4px; color: #1D3FCF; text-decoration: underline; text-underline-offset: 2px">{{a.title}}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(opens in new tab)</span></a>
+                              </div>
+                            </sc-for>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+
+
+              <sc-if value="{{band.showSister}}" hint-placeholder-val="{{ true }}">
+                <div style="border: 1px solid #C9D3F5; border-radius: 10px; overflow: hidden">
+                  <button aria-expanded="{{sisterOpenStr}}" onClick="{{toggleSister}}" style="width: 100%; border: none; background: #EEF2FE; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; cursor: pointer; color: #1B1F24">
+                    <span style="display: flex; flex-direction: column; gap: 2px">
+                      <span style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #142C94; font-weight: 700">Better fit</span>
+                      <span style="font-size: 15px; font-weight: 700">{{band.sister.name}}</span>
+                      <span style="font-size: 13px; line-height: 1.4; color: #3A424C">{{band.sister.oneLine}}</span>
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #1D3FCF; white-space: nowrap">{{sisterToggleLabel}}
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{sisterChevron}}"></path></svg>
+                    </span>
+                  </button>
+                  <sc-if value="{{sisterOpen}}" hint-placeholder-val="{{ false }}">
+                    <div style="padding: 14px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #C9D3F5">
+                      <div style="font-size: 13px; font-weight: 700">Why it fits better</div>
+                      <p style="margin: 0; font-size: 14px; line-height: 1.5">{{band.sister.why}}</p>
+                      <sc-for list="{{band.sister.signals}}" as="s" hint-placeholder-count="3">
+                        <div style="padding: 12px; border: 1px solid #E3E6EB; border-radius: 8px; display: flex; flex-direction: column; gap: 6px">
+                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+                            <div style="font-size: 14px; font-weight: 600">{{s.name}}</div>
+                            <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: {{s.ink}}; background: {{s.soft}}; border-radius: 999px; padding: 3px 10px; white-space: nowrap">
+                    <sc-if value="{{s.isPass}}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></sc-if>
+                    <sc-if value="{{s.isPartial}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12h14"></path></svg></sc-if>
+                    <sc-if value="{{s.isFail}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></sc-if>
+                    {{s.statusLabel}}
+                  </span>
+                          </div>
+                          <div style="font-size: 12px; color: #5B6470">{{s.vs}}</div>
+                          <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3A424C">{{s.reason}}</p>
+                          <sc-if value="{{s.chips}}" hint-placeholder-val="{{ false }}">
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                              <sc-for list="{{s.chips}}" as="c" hint-placeholder-count="4">
+                                <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; border-radius: 6px; padding: 3px 8px; border: 1px solid {{c.line}}; color: {{c.ink}}; background: {{c.bg}}">
+                                  <sc-if value="{{c.matched}}" hint-placeholder-val="{{ true }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></sc-if>
+                                  <sc-if value="{{c.unmatched}}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></sc-if>
+                                  {{c.label}}
+                                </span>
+                              </sc-for>
+                            </div>
+                          </sc-if>
+                          <sc-if value="{{s.toc}}" hint-placeholder-val="{{ false }}">
+                            <div style="border: 1px solid #E3E6EB; border-radius: 8px">
+                              <sc-for list="{{s.toc}}" as="a" hint-placeholder-count="3">
+                                <div style="position: relative; display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 8px; padding: 7px 10px; border-bottom: 1px solid #EEF0F3; font-size: 13px"><span style="color: #5B6470">{{a.date}}</span><a href="{{a.href}}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: baseline; gap: 4px; color: #1D3FCF; text-decoration: underline; text-underline-offset: 2px">{{a.title}}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(opens in new tab)</span></a></div>
+                              </sc-for>
+                            </div>
+                          </sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border-top: 1px solid #E3E6EB">
+                    <span style="font-size: 12px; color: #5B6470">Advisory. The manuscript stays put until you act.</span>
+                    <button onClick="{{reassignFromScope}}" style="height: 36px; border: 1px solid #1D3FCF; background: #FFFFFF; color: #1D3FCF; border-radius: 6px; padding: 0 12px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap">Reassign to {{band.suggested}}</button>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{band.isGreen}}" hint-placeholder-val="{{ false }}">
+                <p style="margin: 0; font-size: 13px; color: #5B6470">No sister journal fits better than {{band.journal}}.</p>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <!-- ===== SNAPSHOT ===== -->
+          <sc-if value="{{isSnap}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 18px">
+              <div style="display: flex; align-items: baseline; justify-content: space-between">
+                <h2 style="margin: 0; font-size: 18px">Manuscript Snapshot</h2>
+                <span style="font-size: 12px; color: #5B6470">AI-written vs verbatim is labelled</span>
+              </div>
+
+              <section style="display: flex; flex-direction: column; gap: 8px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <h3 style="margin: 0; font-size: 15px">Short summary</h3>
+                  <span style="font-size: 11px; font-weight: 600; color: #5B2DB3; background: #F1EBFD; border-radius: 999px; padding: 2px 8px">AI-written</span>
+                </div>
+                <p style="margin: 0; font-size: 14px; line-height: 1.6">This study reports the development of a cationic ruthenium(II) complex, [(η6-p-cymene)Ru(bpm)Cl]+[PF6]−, as a catalyst for the N-alkylation of amides with benzylic alcohols under mild conditions. The method employs a borrowing hydrogen mechanism using Cs₂CO₃ as a base in toluene and achieves good to excellent yields for a broad range of substrates, including pharmaceutically relevant amides. The catalyst outperforms other ruthenium complexes, and the methodology was successfully applied to the synthesis of the antiemetic drug Tigan.</p>
+              </section>
+
+              <section style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #EEF0F3; padding-top: 16px">
+                <div style="display: flex; align-items: center; justify-content: space-between">
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <h3 style="margin: 0; font-size: 15px">Research problem</h3>
+                    <span style="font-size: 11px; font-weight: 600; color: #17603C; background: #E6F4EC; border-radius: 999px; padding: 2px 8px">Verbatim</span>
+                  </div>
+                  <a href="#ms-rp" onClick="{{locateRp}}" style="font-size: 13px; font-weight: 600; text-decoration: none">Locate</a>
+                </div>
+                <p style="{{rpStyle}}">“Traditionally, the synthesis of amides involves the condensation of carboxylic acids or their derivatives (such as acid chlorides, anhydrides, and esters) with amines.10 In addition, aryl and alkenyl halides were also employed as alkylating agents for the N-alkylation of amide,11 which often necessitated the use of stoichiometric amounts of base, generated halide by-products, and required elevated temperatures, thus presenting environmental and practical challenges. To overcome these limitations, the use of alcohols as alkylating agents for N-alkylation of amines and amides has emerged as a more sustainable alternative.12 […] However, the hydroxyl group of alcohols is a poor leaving group. Thus, the use of alcohols as alkylating agents is challenging and requires the use of transition-metal catalysts.13”</p>
+                <button onClick="{{toggleRp}}" style="align-self: flex-start; border: none; background: transparent; padding: 4px 0; color: #1D3FCF; font-size: 13px; font-weight: 600; cursor: pointer">{{rpToggleLabel}}</button>
+              </section>
+
+              <section style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #EEF0F3; padding-top: 16px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <h3 style="margin: 0; font-size: 15px">Proposed approach</h3>
+                  <span style="font-size: 11px; font-weight: 600; color: #5B2DB3; background: #F1EBFD; border-radius: 999px; padding: 2px 8px">AI-written</span>
+                </div>
+                <p style="margin: 0; font-size: 14px; line-height: 1.6">The authors synthesized and characterized a cationic ruthenium(II) complex, [(η6-p-cymene)Ru(bpm)Cl]+[PF6]− (1), where bpm is bis(3,5-dimethylpyrazolyl)methane, and evaluated its catalytic performance for the N-alkylation of amides with benzylic alcohols. The reaction employs Cs₂CO₃ as a base in toluene at 120°C, following a borrowing hydrogen mechanism. The catalyst demonstrated high efficiency compared to other ruthenium compounds, and the methodology was extended to synthesize the antiemetic drug Tigan.</p>
+              </section>
+
+              <section style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #EEF0F3; padding-top: 16px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <h3 style="margin: 0; font-size: 15px">Key findings</h3>
+                  <span style="font-size: 11px; font-weight: 600; color: #17603C; background: #E6F4EC; border-radius: 999px; padding: 2px 8px">Verbatim</span>
+                </div>
+                <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
+                  <sc-for list="{{findings}}" as="f" hint-placeholder-count="3">
+                    <li style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 10px 12px; border: 1px solid #E3E6EB; border-radius: 8px; font-size: 14px; line-height: 1.5">
+                      <span>“{{f.text}}”</span>
+                      <a href="{{f.href}}" onClick="{{f.locate}}" style="font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap">Locate</a>
+                    </li>
+                  </sc-for>
+                </ul>
+              </section>
+            </div>
+          </sc-if>
+
+          <!-- ===== EVIDENCE ===== -->
+          <sc-if value="{{isEv}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 14px">
+              <div style="display: flex; align-items: baseline; justify-content: space-between">
+                <h2 style="margin: 0; font-size: 18px">Evidence Navigator</h2>
+                <span style="font-size: 12px; color: #5B6470">Passages the authors wrote, not verdicts</span>
+              </div>
+              <div role="group" aria-label="Filter evidence" style="display: flex; flex-wrap: wrap; gap: 8px">
+                <sc-for list="{{filters}}" as="fl" hint-placeholder-count="4">
+                  <button aria-pressed="{{fl.selected}}" onClick="{{fl.pick}}" style="{{fl.style}}">{{fl.label}} <span style="opacity: 0.75">{{fl.count}}</span></button>
+                </sc-for>
+              </div>
+
+              <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+                <div style="display: flex; flex-direction: column; gap: 10px">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px">
+                    <span style="width: 10px; height: 10px; border-radius: 3px; background: {{g.swatch}}; border: 1px solid {{g.swatchLine}}"></span>
+                    <h3 style="margin: 0; font-size: 14px">{{g.name}}</h3>
+                    <span style="font-size: 12px; color: #5B6470">{{g.countLabel}}</span>
+                  </div>
+                  <sc-for list="{{g.items}}" as="e" hint-placeholder-count="3">
+                    <article style="{{e.cardStyle}}">
+                      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+                        <span style="font-size: 12px; font-weight: 600; color: #3A424C">{{e.sub}}</span>
+                        <span style="font-size: 12px; color: #5B6470">{{e.meta}}</span>
+                      </div>
+                      <sc-if value="{{e.claim}}" hint-placeholder-val="{{ true }}">
+                        <p style="margin: 0; font-size: 14px; font-weight: 600; line-height: 1.4">{{e.claim}}</p>
+                      </sc-if>
+                      <a href="{{e.href}}" onClick="{{e.locate}}" title="Go to this passage in the manuscript" style="{{e.quoteStyle}}">“{{e.evidence}}”<span style="display: flex; align-items: center; gap: 4px; margin-top: 6px; font-family: 'Source Sans 3',system-ui,sans-serif; font-size: 12px; font-weight: 600; color: #1D3FCF"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>Go to passage</span></a>
+                      <sc-if value="{{e.context}}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size: 12px; color: #3A424C; line-height: 1.5"><strong>{{e.contextRole}}</strong> · {{e.context}}</div>
+                      </sc-if>
+                      <sc-if value="{{e.also}}" hint-placeholder-val="{{ false }}"><div style="font-size: 12px; color: #5B6470">{{e.also}}</div></sc-if>
+                    </article>
+                  </sc-for>
+                  <sc-if value="{{g.more}}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size: 13px; color: #5B6470; padding: 2px 2px 6px 2px">{{g.more}}</div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+
+        </div>
+      </aside>
+    </sc-if>
+  </div>
+
+  <!-- Footer actions -->
+  <footer style="height: 64px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: #FFFFFF; border-top: 1px solid #E3E6EB">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <button onClick="{{goIntegrity}}" style="border: none; background: transparent; padding: 0; cursor: pointer; font: inherit; height: 40px; display: inline-flex; align-items: center; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 14px; font-size: 14px; color: #1B1F24; text-decoration: none">‹ Integrity Checks</button>
+      <button aria-label="Editor notes" style="width: 40px; height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A424C" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"></path><path d="m15 18 5-5"></path></svg>
+      </button>
+      <button aria-label="Comments" style="width: 40px; height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A424C" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"></path></svg>
+      </button>
+    </div>
+    <div style="position: relative; display: flex; align-items: center; gap: 12px">
+      <sc-if value="{{recorded}}" hint-placeholder-val="{{ false }}">
+        <span style="font-size: 13px; color: #17603C; background: #E6F4EC; border-radius: 999px; padding: 5px 12px">Recorded: {{recorded}}</span>
+        <button onClick="{{undoDecision}}" style="border: none; background: transparent; color: #1D3FCF; font-size: 13px; font-weight: 600; cursor: pointer; padding: 6px">Undo</button>
+      </sc-if>
+      <button style="height: 44px; border: 1px solid #1D3FCF; background: #FFFFFF; color: #1D3FCF; border-radius: 8px; padding: 0 16px; font-size: 15px; font-weight: 600; cursor: pointer">Request author review</button>
+      <button aria-haspopup="true" aria-expanded="{{menuOpenStr}}" onClick="{{toggleMenu}}" style="height: 44px; border: none; background: #1D3FCF; color: #FFFFFF; border-radius: 8px; padding: 0 16px 0 20px; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer">
+        Final decision
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{menuChevron}}"></path></svg>
+      </button>
+
+      <sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+        <div role="dialog" aria-label="Final decision" style="position: absolute; right: 0; bottom: 56px; width: 400px; background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 12px; box-shadow: 0 12px 32px rgba(20, 28, 40, 0.18); z-index: 20; overflow: hidden">
+          <div style="padding: 14px 16px 10px 16px; display: flex; align-items: baseline; justify-content: space-between">
+            <div style="font-size: 15px; font-weight: 700">Final decision</div>
+            <div style="font-size: 12px; color: #5B6470">Scope: {{band.label}}</div>
+          </div>
+          <div role="radiogroup" aria-label="Decision" style="display: flex; flex-direction: column; gap: 6px; padding: 0 10px 10px 10px">
+            <sc-for list="{{decisions}}" as="dc" hint-placeholder-count="3">
+              <button role="radio" aria-checked="{{dc.checked}}" onClick="{{dc.pick}}" style="{{dc.style}}">
+                <span style="{{dc.radio}}"><span style="{{dc.dot}}"></span></span>
+                <span style="display: flex; flex-direction: column; gap: 2px; text-align: left">
+                  <span style="font-size: 14px; font-weight: 600; color: {{dc.ink}}">{{dc.label}}</span>
+                  <span style="font-size: 13px; line-height: 1.4; color: #3A424C">{{dc.sub}}</span>
+                  <sc-if value="{{dc.warn}}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size: 12px; line-height: 1.4; font-weight: 600; color: #7A4A00">{{dc.warn}}</span>
+                  </sc-if>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 8px; padding: 10px 16px 14px 16px; border-top: 1px solid #E3E6EB">
+            <button onClick="{{toggleMenu}}" style="height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 14px; font-size: 14px; cursor: pointer">Cancel</button>
+            <button aria-disabled="{{confirmDisabled}}" onClick="{{confirmDecision}}" style="{{confirmStyle}}">{{confirmLabel}}</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </footer>
+
+  <!-- Decision flow: remarks → submit & close → rate session -->
+  <sc-if value="{{flowOpen}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; z-index: 40; background: rgba(27, 31, 36, 0.40); display: flex; align-items: center; justify-content: center; padding: 24px">
+
+      <sc-if value="{{stepRemarks}}" hint-placeholder-val="{{ true }}">
+        <div role="dialog" aria-label="Editor remarks" style="width: 560px; background: #FFFFFF; border-radius: 14px; box-shadow: 0 20px 48px rgba(20, 28, 40, 0.28); display: flex; flex-direction: column">
+          <div style="padding: 20px 24px 6px 24px">
+            <div style="font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: #5B6470">Step 1 of 3 · Remarks</div>
+            <h2 style="margin: 4px 0 0 0; font-size: 20px; color: {{decisionInk}}">{{decisionLabel}}</h2>
+            <p style="margin: 6px 0 0 0; font-size: 14px; line-height: 1.5; color: #3A424C">{{remarksPrompt}}</p>
+          </div>
+          <div style="padding: 14px 24px; display: flex; flex-direction: column; gap: 10px">
+            <sc-if value="{{overrideNote}}" hint-placeholder-val="{{ false }}">
+              <div style="font-size: 13px; line-height: 1.45; font-weight: 600; color: #7A4A00; background: #FDF4E3; border: 1px solid #EBCB93; border-radius: 8px; padding: 8px 12px">{{overrideNote}}</div>
+            </sc-if>
+            <div role="group" aria-label="Common reasons" style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{reasonChips}}" as="r" hint-placeholder-count="3">
+                <button onClick="{{r.add}}" style="height: 30px; border-radius: 999px; padding: 0 12px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #D5DAE1; background: #FFFFFF; color: #1B1F24">+ {{r.label}}</button>
+              </sc-for>
+            </div>
+            <label for="remarks" style="font-size: 13px; font-weight: 600">Your remarks <span style="font-weight: 400; color: #5B6470">(required)</span></label>
+            <textarea id="remarks" rows="5" value="{{remarks}}" onInput="{{onRemarks}}" placeholder="{{remarksPlaceholder}}" style="width: 100%; box-sizing: border-box; resize: none; border: 1px solid #C9CED6; border-radius: 8px; padding: 10px 12px; font-family: inherit; font-size: 14px; line-height: 1.5; color: #1B1F24"></textarea>
+            <div style="font-size: 12px; color: #5B6470">Saved with the decision in the audit trail.</div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 14px 24px 20px 24px; border-top: 1px solid #E3E6EB">
+            <button onClick="{{flowBack}}" style="height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 14px; font-size: 14px; cursor: pointer">Back</button>
+            <button aria-disabled="{{submitDisabled}}" onClick="{{submitRemarks}}" style="{{submitStyle}}">Next: review email</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{stepEmail}}" hint-placeholder-val="{{ false }}">
+        <div role="dialog" aria-label="Decision email" style="width: 760px; max-height: 100%; background: #FFFFFF; border-radius: 14px; box-shadow: 0 20px 48px rgba(20, 28, 40, 0.28); display: flex; flex-direction: column">
+          <div style="flex-shrink: 0; padding: 18px 24px 12px 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: #5B6470">Step 2 of 3 · Email to author</div>
+              <h2 style="margin: 4px 0 0 0; font-size: 20px">{{emailTemplateName}}</h2>
+            </div>
+            <span style="font-size: 12px; font-weight: 600; color: #5B2DB3; background: #F1EBFD; border-radius: 999px; padding: 3px 10px; white-space: nowrap">Pre-filled from assessment · editable</span>
+          </div>
+          <div class="scroll" style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 4px 24px 12px 24px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: center; gap: 8px 12px; font-size: 14px">
+              <span style="color: #5B6470; font-weight: 600">To</span>
+              <span style="display: inline-flex; align-self: start; justify-self: start; align-items: center; gap: 6px; background: #EEF1F5; border-radius: 999px; padding: 4px 12px">Manish Bhattacharjee · mxb@iitkgp.ac.in <span style="font-size: 12px; color: #5B6470">(corresponding author)</span></span>
+              <label for="email-subject" style="color: #5B6470; font-weight: 600">Subject</label>
+              <input id="email-subject" value="{{emailSubject}}" onInput="{{onEmailSubject}}" style="height: 38px; border: 1px solid #C9CED6; border-radius: 8px; padding: 0 12px; font-family: inherit; font-size: 14px; color: #1B1F24">
+            </div>
+            <label for="email-body" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Email body</label>
+            <textarea id="email-body" rows="17" value="{{emailBody}}" onInput="{{onEmailBody}}" style="width: 100%; box-sizing: border-box; resize: vertical; border: 1px solid #C9CED6; border-radius: 8px; padding: 12px 14px; font-family: inherit; font-size: 14px; line-height: 1.55; color: #1B1F24"></textarea>
+            <sc-if value="{{placeholderNote}}" hint-placeholder-val="{{ true }}">
+              <div style="font-size: 13px; font-weight: 600; color: #7A4A00; background: #FDF4E3; border: 1px solid #EBCB93; border-radius: 8px; padding: 8px 12px">{{placeholderNote}}</div>
+            </sc-if>
+          </div>
+          <div style="flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 14px 24px 18px 24px; border-top: 1px solid #E3E6EB">
+            <button onClick="{{emailBack}}" style="height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 14px; font-size: 14px; cursor: pointer">Back to remarks</button>
+            <button onClick="{{sendEmail}}" style="height: 40px; border: none; background: #1D3FCF; color: #FFFFFF; border-radius: 6px; padding: 0 16px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"></path></svg>
+              Send email &amp; close task
+            </button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{stepRate}}" hint-placeholder-val="{{ false }}">
+        <div role="dialog" aria-label="Rate this session" style="width: 480px; background: #FFFFFF; border-radius: 14px; box-shadow: 0 20px 48px rgba(20, 28, 40, 0.28); display: flex; flex-direction: column">
+          <div style="padding: 20px 24px 4px 24px; display: flex; align-items: center; gap: 12px">
+            <span style="width: 36px; height: 36px; border-radius: 50%; background: #E6F4EC; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#17603C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg>
+            </span>
+            <div>
+              <div style="font-size: 16px; font-weight: 700">Task submitted and closed</div>
+              <div style="font-size: 13px; color: #3A424C">{{decisionLabel}} · JO-2026-01178Z</div>
+            </div>
+          </div>
+          <div style="padding: 16px 24px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #EEF0F3; margin-top: 12px">
+            <div style="font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: #5B6470">Step 3 of 3 · Optional</div>
+            <div style="font-size: 15px; font-weight: 700">How useful was this assessment session?</div>
+            <div role="radiogroup" aria-label="Session rating" style="display: flex; align-items: center; gap: 4px">
+              <sc-for list="{{stars}}" as="st" hint-placeholder-count="5">
+                <button role="radio" aria-checked="{{st.checked}}" aria-label="{{st.aria}}" onClick="{{st.pick}}" style="width: 44px; height: 44px; border: none; background: transparent; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center">
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="{{st.fill}}" stroke="{{st.stroke}}" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"></path></svg>
+                </button>
+              </sc-for>
+              <span style="margin-left: 8px; font-size: 14px; font-weight: 600; color: #3A424C">{{rateLabel}}</span>
+            </div>
+            <label for="rate-text" style="font-size: 13px; font-weight: 600">What would have made it better? <span style="font-weight: 400; color: #5B6470">(optional)</span></label>
+            <textarea id="rate-text" rows="3" placeholder="e.g. evidence was hard to find, scope reasons were unclear…" style="width: 100%; box-sizing: border-box; resize: none; border: 1px solid #C9CED6; border-radius: 8px; padding: 10px 12px; font-family: inherit; font-size: 14px; line-height: 1.5"></textarea>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 8px; padding: 14px 24px 20px 24px; border-top: 1px solid #E3E6EB">
+            <button onClick="{{finishFlow}}" style="height: 40px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 14px; font-size: 14px; cursor: pointer">Skip</button>
+            <button onClick="{{finishFlow}}" style="height: 40px; border: none; background: #1D3FCF; color: #FFFFFF; border-radius: 6px; padding: 0 16px; font-size: 14px; font-weight: 600; cursor: pointer">Submit rating</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{stepDone}}" hint-placeholder-val="{{ false }}">
+        <div role="dialog" aria-label="Task closed" style="width: 440px; background: #FFFFFF; border-radius: 14px; box-shadow: 0 20px 48px rgba(20, 28, 40, 0.28); padding: 28px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+          <span style="width: 48px; height: 48px; border-radius: 50%; background: #E6F4EC; display: flex; align-items: center; justify-content: center">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#17603C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg>
+          </span>
+          <div style="font-size: 18px; font-weight: 700">Review task closed</div>
+          <div style="font-size: 14px; color: #3A424C">{{decisionLabel}} recorded with your remarks, and the decision email was sent to the corresponding author.</div>
+          <button onClick="{{goTasks}}" style="border: none; background: transparent; padding: 0; cursor: pointer; font: inherit; margin-top: 8px; height: 42px; border: none; background: #1D3FCF; color: #FFFFFF; border-radius: 8px; padding: 0 18px; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center">Back to My Tasks</button>
+          <button onClick="{{restartFlow}}" style="border: none; background: transparent; color: #5B6470; font-size: 12px; cursor: pointer; padding: 6px">Reset demo</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+
+  </div>
+  </sc-if>
+
+  <!-- Feedback widget (dummy) -->
+  <div style="position: absolute; right: 24px; bottom: 84px; z-index: 30; display: flex; flex-direction: column; align-items: flex-end; gap: 10px">
+    <sc-if value="{{fbOpen}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-label="Share feedback" style="width: 320px; background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 12px; box-shadow: 0 12px 32px rgba(20, 28, 40, 0.18); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px">
+        <sc-if value="{{fbSent}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 6px; padding: 6px 0">
+            <div style="font-size: 15px; font-weight: 700">Thanks — feedback noted.</div>
+            <div style="font-size: 13px; color: #3A424C; line-height: 1.45">It is attached to this manuscript and screen so the team can see the context.</div>
+            <button onClick="{{fbReset}}" style="align-self: flex-start; border: none; background: transparent; padding: 4px 0; color: #1D3FCF; font-size: 13px; font-weight: 600; cursor: pointer">Send more</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{fbForm}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <div style="font-size: 15px; font-weight: 700">Quick feedback</div>
+            <span style="font-size: 12px; color: #5B6470">on this screen</span>
+          </div>
+          <div role="radiogroup" aria-label="Was this helpful?" style="display: flex; gap: 8px">
+            <button role="radio" aria-checked="{{fbUpStr}}" aria-label="Helpful" onClick="{{fbUp}}" style="{{fbUpStyle}}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11H4V10zM7 10l4-7a2 2 0 0 1 2.9 2.3L13 9h6a2 2 0 0 1 2 2.3l-1.4 8A2 2 0 0 1 17.6 21H7"></path></svg>Helpful
+            </button>
+            <button role="radio" aria-checked="{{fbDownStr}}" aria-label="Not helpful" onClick="{{fbDown}}" style="{{fbDownStyle}}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 14V3h3v11zM17 14l-4 7a2 2 0 0 1-2.9-2.3L11 15H5a2 2 0 0 1-2-2.3l1.4-8A2 2 0 0 1 6.4 3H17"></path></svg>Not helpful
+            </button>
+          </div>
+          <div role="group" aria-label="About" style="display: flex; flex-wrap: wrap; gap: 6px">
+            <sc-for list="{{fbTopics}}" as="t" hint-placeholder-count="4">
+              <button aria-pressed="{{t.on}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
+            </sc-for>
+          </div>
+          <label for="fb-text" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Feedback details</label>
+          <textarea id="fb-text" rows="3" placeholder="What worked, or what got in the way?" style="width: 100%; box-sizing: border-box; resize: none; border: 1px solid #D5DAE1; border-radius: 8px; padding: 8px 10px; font-family: inherit; font-size: 14px; line-height: 1.45; color: #1B1F24"></textarea>
+          <div style="display: flex; justify-content: flex-end; gap: 8px">
+            <button onClick="{{fbToggle}}" style="height: 36px; border: 1px solid #D5DAE1; background: #FFFFFF; border-radius: 6px; padding: 0 12px; font-size: 13px; cursor: pointer">Cancel</button>
+            <button onClick="{{fbSend}}" style="height: 36px; border: none; background: #1D3FCF; color: #FFFFFF; border-radius: 6px; padding: 0 14px; font-size: 13px; font-weight: 600; cursor: pointer">Send</button>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+    <button aria-label="Give feedback" aria-expanded="{{fbOpenStr}}" title="Give feedback" onClick="{{fbToggle}}" style="height: 44px; border: 1px solid #D5DAE1; background: #FFFFFF; color: #1B1F24; border-radius: 999px; padding: 0 16px 0 12px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 18px rgba(20, 28, 40, 0.14)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D3FCF" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"></path><path d="M8 10h8" stroke-linecap="round"></path></svg>
+      Feedback
+    </button>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"startScreen": {"editor": "enum", "options": ["My Tasks", "Integrity Checks", "Editorial Assessment"], "default": "My Tasks", "section": "States"}, "scopeBand": {"editor": "enum", "options": ["Green", "Amber", "Red"], "default": "Amber", "section": "States"}, "startTab": {"editor": "enum", "options": ["Scope", "Snapshot", "Evidence"], "default": "Scope", "section": "States"}, "panelWidth": {"editor": "range", "min": 440, "max": 620, "step": 10, "unit": "px", "default": 520, "section": "Layout"}, "$preview": {"width": 1440, "height": 900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { step: null, decision: null, remarks: '', rating: 0, fbOpen: false, fbSent: false, fbRating: null, fbTopic: null, tocPanel: false, sisterOpen: false, tab: null, open: true, active: null, filter: 'all', bd: null, highlights: true, rpOpen: false, width: null, dragging: false, menuOpen: false, choice: null, recorded: null };
+    this.drag = null;
+    this.state.screen = ({ 'My Tasks': 'tasks', 'Integrity Checks': 'integrity', 'Editorial Assessment': 'assessment' })[props.startScreen] || 'tasks';
+    this.state.outcome = null;
+    this.state.ig = { msOpen: false, filter: 'attention', open: { i1: true }, unflagged: {}, queryOpen: false, sent: false, qSubject: '', qBody: '' };
+  }
+
+  clampW(w) { return Math.max(400, Math.min(760, Math.round(w))); }
+
+  bandData(key) {
+    const TONE = {
+      Green: { dot: '#1E8A55', ink: '#17603C', soft: '#EAF6EF', line: '#B9DEC9' },
+      Amber: { dot: '#D08A10', ink: '#7A4A00', soft: '#FDF4E3', line: '#EBCB93' },
+      Red:   { dot: '#C4201A', ink: '#A1180F', soft: '#FDEDEC', line: '#F0B8B4' }
+    };
+    const ST = {
+      pass:    { ink: '#17603C', soft: '#E6F4EC', isPass: true },
+      partial: { ink: '#7A4A00', soft: '#FDF1DC', isPartial: true },
+      fail:    { ink: '#A1180F', soft: '#FDECEA', isFail: true }
+    };
+    const chip = (label, m) => m
+      ? { label, matched: true, unmatched: false, ink: '#17603C', bg: '#F1FAF4', line: '#B9DEC9' }
+      : { label, matched: false, unmatched: true, ink: '#5B6470', bg: '#FFFFFF', line: '#D5DAE1' };
+    const sig = (name, weight, st, statusLabel, reason, extra) => Object.assign({ name, weight, statusLabel, reason, chips: false, toc: false, sisters: false, isPass: false, isPartial: false, isFail: false }, ST[st], extra || {});
+    const SIS = {
+      name: 'ABC Catalysis Letters', oneLine: 'Catalytic C–N bond formation is core scope here.',
+      why: 'The manuscript\'s main contribution is a catalytic method for amide N-alkylation via borrowing hydrogen. That is named in this journal\'s scope, all four subject tags but one match its subfields, and its recent issues publish closely related catalysis work.',
+      signals: [
+        sig('Aim & Scope', 'primary', 'pass', 'Match', 'The scope statement names homogeneous catalysis for C–N bond formation, which is the manuscript\u2019s core contribution.'),
+        sig('Subfield match', 'supporting', 'pass', '3 of 4 matched', 'Matched on homogeneous catalysis, C–N bond formation and Ru complexes; crystal-structure work is outside the subfield list.', { chips: [chip('Homogeneous catalysis', true), chip('C–N bond formation', true), chip('Ruthenium(II) complexes', true), chip('Organometallic synthesis', false)] }),
+        sig('Recent articles', 'supporting', 'pass', 'Closely related', 'Recent issues publish borrowing-hydrogen alkylation and Ru-catalysed hydrogen transfer.', { toc: [{ date: 'Aug 2026', title: 'Manganese-catalysed borrowing-hydrogen alkylation of amines' }, { date: 'Jul 2026', title: 'Ligand effects in Ru-catalysed transfer hydrogenation' }, { date: 'May 2026', title: 'Base-metal catalysts for C–N coupling with alcohols' }] })
+      ]
+    };
+    const D = {
+      Amber: {
+        label: 'Partial fit', why: 'Why partial?', journal: 'ABC Journal of Inorganic Chemistry',
+        summary: 'The complex synthesis and crystal structure fit this journal, but the main contribution is a catalytic C–N bond-forming method, which sits at the edge of its scope.',
+        showSister: true, suggested: 'ABC Catalysis Letters', sister: SIS,
+        submittedWhy: 'Fits the complex synthesis and structure; catalytic methodology is peripheral to its stated scope.',
+        suggestedWhy: 'Catalytic N-alkylation via borrowing hydrogen is core scope, and its recent issues cover closely related work.',
+        signals: [
+          sig('Aim & Scope', 'primary', 'partial', 'Partial', 'Core contribution is a catalytic method for amide N-alkylation; the scope statement centres on structure, bonding and reactivity of metal compounds, with catalysis included only where the metal centre is the focus.'),
+          sig('Subfield match', 'supporting', 'partial', '2 of 4 matched', 'Matched on coordination and organometallic synthesis; homogeneous catalysis and C–N bond formation are not in the journal\u2019s subfield list.', { chips: [chip('Ruthenium(II) complexes', true), chip('Organometallic synthesis', true), chip('Homogeneous catalysis', false), chip('C–N bond formation', false)] }),
+          sig('Recent articles', 'supporting', 'partial', 'Loosely related', 'Recent issues feature Ru(II) arene complexes, but none report catalytic organic methodology.', { toc: [{ date: 'Aug 2026', title: 'Spin-crossover behaviour in iron(II) pyrazolylborate complexes' }, { date: 'Jul 2026', title: 'Luminescent copper(I) clusters with bridging phosphine ligands' }, { date: 'Jun 2026', title: 'Half-sandwich ruthenium(II) arene complexes as anticancer agents' }] }),
+        ]
+      },
+      Green: {
+        label: 'Good fit', why: 'Signal breakdown', journal: 'ABC Catalysis Letters',
+        summary: 'Catalytic N-alkylation via borrowing hydrogen is squarely within the journal\u2019s stated scope and recent output.',
+        showSister: false, sister: false, suggested: '', submittedWhy: '', suggestedWhy: '',
+        signals: [
+          sig('Aim & Scope', 'primary', 'pass', 'Match', 'The scope statement names homogeneous catalysis for C–N bond formation, which is the manuscript\u2019s core contribution.'),
+          sig('Subfield match', 'supporting', 'pass', '3 of 4 matched', 'Matched on homogeneous catalysis, C–N bond formation and Ru complexes; crystal-structure work is outside the subfield list.', { chips: [chip('Homogeneous catalysis', true), chip('C–N bond formation', true), chip('Ruthenium(II) complexes', true), chip('Organometallic synthesis', false)] }),
+          sig('Recent articles', 'supporting', 'pass', 'Closely related', 'Recent issues publish borrowing-hydrogen alkylation and Ru-catalysed hydrogen transfer.', { toc: [{ date: 'Aug 2026', title: 'Manganese-catalysed borrowing-hydrogen alkylation of amines' }, { date: 'Jul 2026', title: 'Ligand effects in Ru-catalysed transfer hydrogenation' }, { date: 'May 2026', title: 'Base-metal catalysts for C–N coupling with alcohols' }] }),
+        ]
+      },
+      Red: {
+        label: 'No fit', why: 'Why no fit?', journal: 'ABC Materials Today',
+        summary: 'This is a molecular catalysis study; the journal publishes materials design, processing and device work.',
+        showSister: true, suggested: 'ABC Catalysis Letters', sister: SIS,
+        submittedWhy: 'No overlap: the journal covers bulk and thin-film materials, not molecular catalysts.',
+        suggestedWhy: 'Catalytic N-alkylation via borrowing hydrogen is core scope, and its recent issues cover closely related work.',
+        signals: [
+          sig('Aim & Scope', 'primary', 'fail', 'No match', 'The manuscript contributes a homogeneous catalytic method; the scope statement is limited to materials design, processing and devices.'),
+          sig('Subfield match', 'supporting', 'fail', '0 of 4 matched', 'None of the manuscript\u2019s subject tags appear in the journal\u2019s subfield list.', { chips: [chip('Homogeneous catalysis', false), chip('C–N bond formation', false), chip('Ruthenium(II) complexes', false), chip('Organometallic synthesis', false)] }),
+          sig('Recent articles', 'supporting', 'fail', 'Unrelated topic', 'Recent issues cover perovskite films, membranes and solid electrolytes.', { toc: [{ date: 'Aug 2026', title: 'Moisture-stable perovskite films via additive engineering' }, { date: 'Jul 2026', title: 'Metal–organic framework membranes for gas separation' }, { date: 'Jun 2026', title: 'Sulfide solid electrolytes for all-solid-state batteries' }] }),
+        ]
+      }
+    };
+    const link = (t) => Object.assign({}, t, { href: 'https://abcpress.example/articles/' + t.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') });
+    Object.keys(D).forEach((k) => {
+      const b = D[k];
+      b.signals = b.signals.map((x) => (x.toc ? Object.assign({}, x, { toc: x.toc.map(link) }) : x));
+      if (b.sister) {
+        b.sister = Object.assign({}, b.sister, { signals: b.sister.signals.map((x, i) => Object.assign({}, x, { toc: x.toc ? x.toc.map(link) : false, vs: b.signals[i] ? b.journal + ': ' + b.signals[i].statusLabel : '' })) });
+      }
+    });
+    const d = D[key] || D.Amber;
+    return Object.assign({}, d, TONE[key] || TONE.Amber, { isGreen: key === 'Green', isAmber: key === 'Amber', isRed: key === 'Red' });
+  }
+
+  evidence() {
+    return [
+      { id: 'n1', cat: 'novelty', sub: 'Method novelty', meta: 'Results · implicit · medium', claim: 'A new cationic Ru(II) bpm complex (1) is introduced as the N-alkylation catalyst.', evidence: 'Thus, the compound, [(η6-p-cymene)Ru(bpm)Cl]+[PF6]−(1) has been synthesized from the reaction of [(η6-p-…', contextRole: 'Gap', context: 'However, the hydroxyl group of alcohols is a poor leaving group. Thus, the use of alcohols as alkylating agents is challenging and requires the use of transition-metal catalysts.', target: 'n1', label: 'Method novelty' },
+      { id: 'n2', explicit: true, cat: 'novelty', sub: 'Method novelty', meta: 'Results · explicit · high', claim: 'The complex catalyses N-benzylation of benzamide at 1 mol% loading.', evidence: 'The reaction performed in the presence of 1 mol% of 1 in toluene for 16 h afforded N-benzylbenzamide (4a) in 67% yield (Entry 1, Table 1).', contextRole: '', context: '', also: 'Also cited under Methodology', target: 'n2', label: 'Method novelty' },
+      { id: 'n3', cat: 'novelty', sub: 'Result novelty', meta: 'Results · implicit · medium', claim: 'Aliphatic amides such as acetamide do not react under these conditions.', evidence: 'The reaction of acetamide with benzyl alcohol did not afford any product. Similarly, we could not isolate any…', contextRole: '', context: '', target: 'n3', label: 'Result novelty' },
+      { id: 's1', cat: 'significance', sub: 'Practical significance', meta: 'Results · implicit · medium', claim: 'The method is applied to synthesise the antiemetic drug Tigan (Scheme 3).', evidence: 'After exploring the reaction\'s substrate scope, we decided to apply the methodology developed for the synthes…', contextRole: '', context: '', target: 's1', label: 'Significance' },
+      { id: 'm1', cat: 'methodology', sub: 'Model reaction', meta: 'Results', claim: '', evidence: 'The reaction between benzamide (2a) and benzyl alcohol (3a) was chosen as a model reaction.', contextRole: '', context: '', target: 'm1', label: 'Methodology' },
+      { id: 'm2', cat: 'methodology', sub: 'Catalyst loading', meta: 'Results', claim: '', evidence: 'The reaction performed in the presence of 1 mol% of 1 in toluene for 16 h afforded N-benzylbenzamide (4a) in 67% yield (Entry 1, Table 1).', contextRole: '', context: '', also: 'Also cited under Novelty', target: 'n2', label: 'Methodology' },
+      { id: 'm4', cat: 'methodology', sub: 'Catalyst loading', meta: 'Results', claim: '', evidence: 'Reducing the catalyst loading to 0.5 mol% of 1 resulted in a significant decrease in yield to 20% (Entry 2, Table 1).', contextRole: '', context: '', target: 'm4', label: 'Methodology' },
+      { id: 'm5', cat: 'methodology', sub: 'Catalyst loading', meta: 'Results', claim: '', evidence: 'Increasing the catalyst loading to 1.5 mol% markedly improved the conversion (95%) (Entry 3, Table 1).', contextRole: '', context: '', target: 'm5', label: 'Methodology' },
+      { id: 'm3', cat: 'methodology', sub: 'Solvent screen', meta: 'Results', claim: '', evidence: 'We studied the effect of solvent on 1-catalyzed N-alkylation, and the results are…', contextRole: '', context: '', target: 'm3', label: 'Methodology' }
+    ];
+  }
+
+  buildEmail(key, band, remarks) {
+    const T = 'N-Alkylation of Amides with Benzylic Alcohols Catalyzed by a Cationic Ruthenium(II) Complex';
+    const ID = 'JO-2026-01178Z-20260518041038';
+    const J = band.journal;
+    const hi = 'Dear Dr Bhattacharjee,\n\nThank you for submitting \u201c' + T + '\u201d to ' + J + '.\n\n';
+    const sign = '\n\nYours sincerely,\n[Editor Name]\n[Editor Role]\n' + J;
+    const contribution = 'a cationic ruthenium(II) complex that catalyses the N-alkylation of amides with benzylic alcohols via a borrowing-hydrogen mechanism, applied to the synthesis of the antiemetic drug Tigan';
+    const scopeReason = band.isGreen ? 'homogeneous catalysis for C\u2013N bond formation' : 'the synthesis and structural characterisation of a new ruthenium(II) complex';
+    const r = (remarks || '').trim().replace(/\.?$/, '.');
+    if (key === 'accept') {
+      return { name: 'Proceed to peer review', subject: 'Decision on Manuscript ' + ID + ': Proceeding to Peer Review', body: hi +
+        'Following our initial editorial assessment, we have decided to proceed with external peer review.\n\nOur assessment found that:\n' +
+        '\u2022 The manuscript is aligned with the journal\u2019s scope, particularly ' + scopeReason + '.\n' +
+        '\u2022 The study presents ' + contribution + '.\n' +
+        '\u2022 The methodology appears suitable for evaluation by subject experts.\n' +
+        '\u2022 No unresolved integrity concerns currently prevent the manuscript from proceeding.\n\n' +
+        'We noted the following minor points, which may need to be addressed during the review process:\n\u2022 None\n\n' +
+        'This decision means that the manuscript will now be evaluated by independent reviewers. It does not constitute acceptance for publication.\n\n' +
+        'We will contact you when the reviewers\u2019 reports and the editor\u2019s next decision are available.' + sign };
+    }
+    if (key === 'reject') {
+      const scope = band.isGreen ? 'No scope concern; the manuscript fits the journal\u2019s scope.' : 'The manuscript\u2019s main contribution is a catalytic C\u2013N bond-forming method, which falls outside the core scope of ' + J + '.';
+      return { name: 'Reject without peer review', subject: 'Decision on Manuscript ' + ID, body: hi +
+        'Following our initial editorial assessment, we are unable to proceed with the manuscript.\n\nThe principal reasons for this decision are:\n' +
+        '\u2022 Scope: ' + scope + '\n' +
+        '\u2022 Editorial assessment: [Explain the concern regarding novelty, significance, methodology or support for the conclusions.]\n' +
+        '\u2022 Integrity or policy requirements: [Describe only a verified or unresolved issue in neutral language, or delete this line.]\n\n' +
+        'In particular, ' + (r.length > 1 ? r.charAt(0).toLowerCase() + r.slice(1) : '[provide a short evidence-based explanation of the finding that materially affected the decision].') + '\n\n' +
+        'This decision was made by the editor after considering the manuscript and the available assessment findings. Automated screening results were used only as supporting information.\n\n' +
+        'We would not encourage resubmission of this manuscript to the journal.\n\n' +
+        'Thank you for considering ' + J + ' for your work.' + sign };
+    }
+    const focus = 'a catalytic method for the N-alkylation of amides with benzylic alcohols';
+    const jscope = band.isRed ? 'materials design, processing and devices' : (band.isGreen ? 'homogeneous catalysis' : 'the structure, bonding and reactivity of inorganic and organometallic compounds');
+    const transfer = band.suggested
+      ? 'We would therefore like to offer you the option of transferring the manuscript to ' + band.suggested + '. The transfer will occur only with your consent.'
+      : 'You may wish to consider submitting the manuscript to a journal whose scope more directly covers homogeneous catalysis and C\u2013N bond formation.';
+    return { name: 'Out of scope \u2014 transfer option', subject: 'Decision on Manuscript ' + ID + ': Journal Scope and Transfer Option', body: hi +
+      'Following our initial editorial assessment, we have concluded that the manuscript is not sufficiently aligned with the current scope of the journal.\n\n' +
+      'The manuscript primarily focuses on ' + focus + ', whereas ' + J + ' currently prioritises work relating to ' + jscope + '. This decision concerns journal fit and is not a judgement on the overall quality of the research.\n\n' +
+      'Our assessment found that:\n' +
+      '\u2022 Integrity screening: No unresolved concerns were identified.\n' +
+      '\u2022 Methodological readiness: The model reaction and the catalyst-loading, solvent and base screens are reported.\n' +
+      '\u2022 Editorial contribution: The study presents ' + contribution + '.\n' +
+      '\u2022 Scope fit: The work may be better suited to a journal focusing on homogeneous catalysis and C\u2013N bond formation.\n\n' +
+      transfer + '\n\nThank you for giving us the opportunity to consider your work.' + sign };
+  }
+
+  mainVals() {
+    const s = this.state;
+    const bandKey = this.props.scopeBand ?? 'Amber';
+    const band = this.bandData(bandKey);
+    const startTab = ({ Scope: 'scope', Snapshot: 'snapshot', Evidence: 'evidence', Contents: 'contents' })[this.props.startTab ?? 'Scope'] || 'scope';
+    const tab = s.tab || startTab;
+    const defaultW = this.props.panelWidth ?? 520;
+    const w = s.width ?? defaultW;
+
+    const dragStart = (e) => {
+      const el = e.currentTarget;
+      const r = el.getBoundingClientRect();
+      const scale = el.offsetWidth ? r.width / el.offsetWidth : 1;
+      this.drag = { x: e.clientX, w, scale: scale || 1 };
+      try { el.setPointerCapture(e.pointerId); } catch (err) {}
+      this.setState({ dragging: true });
+    };
+    const dragMove = (e) => {
+      if (!this.drag) return;
+      const dx = (this.drag.x - e.clientX) / this.drag.scale;
+      this.setState({ width: this.clampW(this.drag.w + dx) });
+    };
+    const dragEnd = () => { this.drag = null; this.setState({ dragging: false }); };
+    const resizeKey = (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); this.setState({ width: this.clampW(w + 20) }); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); this.setState({ width: this.clampW(w - 20) }); }
+    };
+    const hot = s.dragging;
+    const handleStyle = 'width: 12px; margin: 0 -14px; flex-shrink: 0; align-self: stretch; border: none; padding: 0; background: transparent; cursor: col-resize; display: flex; align-items: center; justify-content: center; touch-action: none; position: relative; z-index: 5';
+    const gripStyle = 'display: block; width: 4px; height: ' + (hot ? '96px' : '48px') + '; border-radius: 4px; background: ' + (hot ? '#1D3FCF' : '#C9CED6');
+
+    const accentOverride = !band.isGreen;
+    const DEC = [
+      { key: 'accept', label: 'Accept for peer review', ink: '#142C94', sub: 'Moves the manuscript to reviewer invitation.', warn: accentOverride ? 'Scope is ' + band.label + '. Accepting is logged as an override.' : false },
+      { key: 'reject', label: 'Reject', ink: '#A1180F', sub: 'Desk reject. You add the decision note to the author next.', warn: false },
+      { key: 'reassign', label: 'Reassign journal', ink: '#1B1F24', sub: band.showSister ? 'Suggested: ' + band.suggested + ' (you can change it next).' : 'Choose a sister journal next.', warn: false }
+    ];
+    const decisions = DEC.map((d) => {
+      const on = s.choice === d.key;
+      return Object.assign({}, d, {
+        checked: on ? 'true' : 'false',
+        pick: () => this.setState({ choice: d.key }),
+        style: 'display: flex; align-items: flex-start; gap: 12px; width: 100%; min-height: 56px; padding: 12px; border-radius: 8px; cursor: pointer; background: ' + (on ? '#F2F5FE' : '#FFFFFF') + '; border: ' + (on ? '2px solid #1D3FCF' : '1px solid #E3E6EB'),
+        radio: 'flex-shrink: 0; margin-top: 2px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 2px solid ' + (on ? '#1D3FCF' : '#9AA1AB') + '; display: flex; align-items: center; justify-content: center',
+        dot: 'width: 8px; height: 8px; border-radius: 50%; background: ' + (on ? '#1D3FCF' : 'transparent')
+      });
+    });
+    const flowDec = DEC.find((d) => d.key === s.decision);
+    const canSubmit = (s.remarks || '').trim().length >= 10;
+    const RATE = { 1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very good', 5: 'Excellent' };
+    const chosen = DEC.find((d) => d.key === s.choice);
+    const CONFIRM_BG = { accept: '#1D3FCF', reject: '#C4201A', reassign: '#1B1F24' };
+
+    const TABS = [
+      { key: 'scope', short: 'Scope', full: 'Scope', count: false },
+      { key: 'snapshot', short: 'Snapshot', full: 'Manuscript Snapshot', count: false },
+      { key: 'evidence', short: 'Evidence', full: 'Evidence Navigator', count: '13' }
+    ];
+    const tabs = TABS.map((t) => {
+      const sel = t.key === tab;
+      return Object.assign({}, t, {
+        selected: sel ? 'true' : 'false',
+        isScope: t.key === 'scope', isSnap: t.key === 'snapshot', isEv: t.key === 'evidence', isToc: t.key === 'contents',
+        style: 'min-height: 52px; border: none; border-bottom: 3px solid ' + (sel ? '#1D3FCF' : 'transparent') + '; background: #FFFFFF; color: ' + (sel ? '#1D3FCF' : '#3A424C') + '; font-size: 14px; font-weight: ' + (sel ? '700' : '500') + '; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0 6px',
+        pick: () => this.setState({ tab: t.key }),
+        openTo: () => this.setState({ tab: t.key, open: true })
+      });
+    });
+
+    const all = this.evidence();
+    const setActive = (id) => () => this.setState({ active: id, highlights: true });
+    const COLORS = {
+      novelty: { soft: '#EFE9FD', line: '#CDBEF3', name: 'Novelty' },
+      significance: { soft: '#E4F4EA', line: '#B5DDC4', name: 'Significance' },
+      methodology: { soft: '#E6EEFD', line: '#BCCDF3', name: 'Methodology' }
+    };
+    const activeItem = all.find((e) => e.id === s.active);
+    const activeTarget = activeItem ? activeItem.target : (s.active === 'rp' ? 'rp' : null);
+
+    const counts = { novelty: 3, significance: 1, methodology: 9 };
+    const filters = [
+      { key: 'all', label: 'All' , count: '' },
+      { key: 'novelty', label: 'Novelty', count: counts.novelty },
+      { key: 'significance', label: 'Significance', count: counts.significance },
+      { key: 'methodology', label: 'Methodology', count: counts.methodology }
+    ].map((f) => {
+      const sel = s.filter === f.key;
+      return Object.assign({}, f, {
+        selected: sel ? 'true' : 'false',
+        pick: () => this.setState({ filter: f.key }),
+        style: 'min-height: 34px; border-radius: 999px; padding: 0 12px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid ' + (sel ? '#1D3FCF' : '#D5DAE1') + '; background: ' + (sel ? '#1D3FCF' : '#FFFFFF') + '; color: ' + (sel ? '#FFFFFF' : '#1B1F24')
+      });
+    });
+
+    const groups = ['novelty', 'significance', 'methodology']
+      .filter((c) => s.filter === 'all' || s.filter === c)
+      .map((c) => {
+        const items = all.filter((e) => e.cat === c).map((e) => {
+          const act = s.active === e.id;
+          return Object.assign({}, e, {
+            also: e.also || (e.target ? '' : 'Placeholder'),
+            href: e.target ? '#ms-' + e.target : '#',
+            locate: setActive(e.id),
+            claim: e.explicit ? '' : e.claim,
+            context: e.explicit ? '' : e.context,
+            quoteStyle: 'display: block; margin: 0; padding: 10px 12px; border-radius: 6px; text-decoration: none; cursor: pointer; color: #1B1F24; font-family: \'Source Serif 4\',Georgia,serif; font-size: 14px; line-height: 1.55; background: ' + (act ? '#FFF8E1' : '#F7F8FA') + '; border-left: 3px solid ' + (act ? '#E9B949' : '#D5DAE1'),
+            cardStyle: 'display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 8px; background: #FFFFFF; border: ' + (act ? '2px solid #1D3FCF' : '1px solid #E3E6EB')
+          });
+        });
+        const more = c === 'methodology' ? '4 more methodology passages (solvent, base, substrate scope, control reaction) — [from extraction output]' : false;
+        return { name: COLORS[c].name, swatch: COLORS[c].soft, swatchLine: COLORS[c].line, countLabel: String(counts[c]) + (counts[c] === 1 ? ' passage' : ' passages'), items, more };
+      });
+
+    const spanStyle = (id, cat) => {
+      // Only the passage the editor clicked is highlighted; nothing else is tinted.
+      return activeTarget === id ? 'background: #FFF1C2; box-shadow: 0 0 0 3px #FFF1C2; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 0.2s' : '';
+    };
+    const hl = {
+      rp: activeTarget === 'rp' ? spanStyle('rp', null) : '',
+      gap: activeTarget === 'rp' ? 'background: #FFF1C2; box-shadow: 0 0 0 3px #FFF1C2; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 0.2s' : '',
+      n1: spanStyle('n1', 'novelty'), n2: spanStyle('n2', 'novelty'), n3: spanStyle('n3', 'novelty'),
+      s1: spanStyle('s1', 'significance'), m1: spanStyle('m1', 'methodology'), m3: spanStyle('m3', 'methodology'), m4: spanStyle('m4', 'methodology'), m5: spanStyle('m5', 'methodology')
+    };
+
+    const MK_BG = { novelty: '#C62828', methodology: '#0F7F7A', significance: '#6B3FC4' };
+    const mkIds = ['n1', 'n2', 'n3', 's1', 'm1', 'm2', 'm3', 'm4', 'm5'];
+    const mk = {}; const mks = {};
+    mkIds.forEach((id) => {
+      const ev = this.evidence().find((e) => e.id === id);
+      const on = s.active === id;
+      mk[id] = () => this.setState({ active: id, tab: 'evidence', open: true, filter: 'all' });
+      mks[id] = 'display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; margin: 0 0 4px 0; padding: 0; border-radius: 50%; border: 2px solid ' + (on ? '#1B1F24' : '#FFFFFF') + '; background: ' + MK_BG[ev.cat] + '; color: #FFFFFF; font-family: \'Source Sans 3\',system-ui,sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; box-shadow: 0 0 0 1px rgba(0,0,0,0.08)';
+    });
+    const fbBtn = (on) => 'flex: 1; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid ' + (on ? '#1D3FCF' : '#D5DAE1') + '; background: ' + (on ? '#E8EDFD' : '#FFFFFF') + '; color: ' + (on ? '#142C94' : '#1B1F24');
+    const findings = [
+      { text: 'The reaction performed in the presence of 1 mol% of 1 in toluene for 16 h afforded N-benzylbenzamide (4a) in 67% yield (Entry 1, Table 1).', target: 'n2' },
+      { text: 'Reducing the catalyst loading to 0.5 mol% of 1 resulted in a significant decrease in yield to 20% (Entry 2, Table 1).', target: 'm4' },
+      { text: 'Increasing the catalyst loading to 1.5 mol% markedly improved the conversion (95%) (Entry 3, Table 1).', target: 'm5' }
+    ].map((f) => Object.assign({}, f, { href: '#ms-' + f.target, locate: () => this.setState({ active: f.target === 'n2' ? 'm2' : f.target, highlights: true }) }));
+
+    const bdOpen = !!s.bd;
+
+    return {
+      band,
+      tabs,
+      open: s.open, closed: !s.open,
+      panelW: w + 'px',
+      dragStart, dragMove, dragEnd, resizeKey, handleStyle, gripStyle,
+      resetWidth: () => this.setState({ width: null }),
+      sisterOpen: s.sisterOpen,
+      sisterOpenStr: s.sisterOpen ? 'true' : 'false',
+      sisterToggleLabel: s.sisterOpen ? 'Hide reasoning' : 'Why better?',
+      sisterChevron: s.sisterOpen ? 'm6 15 6-6 6 6' : 'm6 9 6 6 6-6',
+      toggleSister: () => this.setState({ sisterOpen: !s.sisterOpen }),
+      tocPanelOpen: s.tocPanel,
+      tocPanelClosed: !s.tocPanel,
+      toggleTocPanel: () => this.setState({ tocPanel: !s.tocPanel }),
+      bdOpenStr: bdOpen ? 'true' : 'false',
+      bdClosed: !bdOpen,
+      bdSummary: band.signals.map((x) => x.name + ': ' + x.statusLabel).join(' · '),
+      bdChevron: bdOpen ? 'm6 15 6-6 6 6' : 'm6 9 6 6 6-6',
+      bdHint: bdOpen ? 'Hide' : 'Details',
+      toggleBreakdown: () => this.setState({ bd: !bdOpen }),
+      mk, mks,
+      fbOpen: s.fbOpen, fbOpenStr: s.fbOpen ? 'true' : 'false',
+      fbSent: s.fbSent, fbForm: !s.fbSent,
+      fbToggle: () => this.setState({ fbOpen: !s.fbOpen, fbSent: false }),
+      fbSend: () => this.setState({ fbSent: true }),
+      fbReset: () => this.setState({ fbSent: false, fbRating: null, fbTopic: null }),
+      fbUpStr: s.fbRating === 'up' ? 'true' : 'false',
+      fbDownStr: s.fbRating === 'down' ? 'true' : 'false',
+      fbUp: () => this.setState({ fbRating: 'up' }),
+      fbDown: () => this.setState({ fbRating: 'down' }),
+      fbUpStyle: fbBtn(s.fbRating === 'up'),
+      fbDownStyle: fbBtn(s.fbRating === 'down'),
+      fbTopics: ['Scope', 'Evidence', 'Snapshot', 'Layout', 'Other'].map((label) => ({ label, on: s.fbTopic === label ? 'true' : 'false', pick: () => this.setState({ fbTopic: label }), style: 'height: 30px; border-radius: 999px; padding: 0 12px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid ' + (s.fbTopic === label ? '#1D3FCF' : '#D5DAE1') + '; background: ' + (s.fbTopic === label ? '#E8EDFD' : '#FFFFFF') + '; color: ' + (s.fbTopic === label ? '#142C94' : '#1B1F24') })),
+      flowOpen: !!s.step,
+      stepRemarks: s.step === 'remarks', stepRate: s.step === 'rate', stepDone: s.step === 'done',
+      decisionLabel: flowDec ? flowDec.label : '',
+      decisionInk: flowDec ? flowDec.ink : '#1B1F24',
+      remarksPrompt: flowDec ? ({ accept: 'Why are you sending this manuscript to peer review?', reject: 'Why are you rejecting this manuscript?', reassign: 'Why are you moving this manuscript to another journal?' })[flowDec.key] : '',
+      remarksPlaceholder: 'Write the reasons behind your decision…',
+      overrideNote: flowDec && flowDec.key === 'accept' && !band.isGreen ? 'Scope is ' + band.label + ' for ' + band.journal + '. These remarks are logged as the reason for proceeding.' : false,
+      reasonChips: (flowDec ? ({ accept: ['Within scope', 'Novel contribution', 'Sound methodology'], reject: ['Out of scope', 'Insufficient novelty', 'Methodological concerns'], reassign: ['Better fit for ' + (band.suggested || 'a sister journal'), 'Outside core scope'] })[flowDec.key] : []).map((label) => ({ label, add: () => this.setState({ remarks: (s.remarks ? s.remarks.replace(/\s*$/, '') + (/[.;]$/.test(s.remarks.trim()) ? ' ' : '. ') : '') + label + '.' }) })),
+      remarks: s.remarks || '',
+      onRemarks: (e) => this.setState({ remarks: e.target.value }),
+      submitDisabled: canSubmit ? 'false' : 'true',
+      submitStyle: 'height: 40px; border: none; border-radius: 6px; padding: 0 16px; font-size: 14px; font-weight: 600; cursor: ' + (canSubmit ? 'pointer' : 'not-allowed') + '; color: ' + (canSubmit ? '#FFFFFF' : '#5B6470') + '; background: ' + (canSubmit ? '#1D3FCF' : '#E3E6EB'),
+      stepEmail: s.step === 'email',
+      emailTemplateName: s.emailName || '',
+      emailSubject: s.emailSubject || '',
+      emailBody: s.emailBody || '',
+      onEmailSubject: (e) => this.setState({ emailSubject: e.target.value }),
+      onEmailBody: (e) => this.setState({ emailBody: e.target.value }),
+      placeholderNote: (() => { const n = ((s.emailBody || '') + (s.emailSubject || '')).match(/\[[^\]]+\]/g); return n ? n.length + (n.length === 1 ? ' placeholder' : ' placeholders') + ' in [brackets] still to fill: ' + n.slice(0, 3).map((x) => (x.length > 30 ? x.slice(0, 27) + '…]' : x)).join(', ') + (n.length > 3 ? '…' : '') : false; })(),
+      emailBack: () => this.setState({ step: 'remarks' }),
+      sendEmail: () => this.setState({ step: 'rate', rating: 0 }),
+      submitRemarks: () => { if (canSubmit) { const em = this.buildEmail(s.decision, band, s.remarks); this.setState({ step: 'email', emailName: em.name, emailSubject: em.subject, emailBody: em.body }); } },
+      flowBack: () => this.setState({ step: null, menuOpen: true, choice: s.decision }),
+      stars: [1, 2, 3, 4, 5].map((n) => ({ checked: s.rating === n ? 'true' : 'false', aria: n + (n === 1 ? ' star' : ' stars') + ' — ' + RATE[n], fill: n <= (s.rating || 0) ? '#F2B01E' : 'none', stroke: n <= (s.rating || 0) ? '#C98A00' : '#9AA1AB', pick: () => this.setState({ rating: n }) })),
+      rateLabel: s.rating ? RATE[s.rating] : '',
+      finishFlow: () => this.setState({ step: 'done' }),
+      restartFlow: () => this.setState({ step: null, decision: null, remarks: '', rating: 0 }),
+      reassignFromScope: () => this.setState({ menuOpen: true, choice: 'reassign' }),
+      menuOpen: s.menuOpen,
+      menuOpenStr: s.menuOpen ? 'true' : 'false',
+      menuChevron: s.menuOpen ? 'm6 9 6 6 6-6' : 'm6 15 6-6 6 6',
+      toggleMenu: () => this.setState({ menuOpen: !s.menuOpen, choice: s.menuOpen ? null : s.choice }),
+      decisions,
+      confirmDisabled: chosen ? 'false' : 'true',
+      confirmLabel: chosen ? 'Next: add remarks' : 'Choose a decision',
+      confirmStyle: 'height: 40px; border: none; border-radius: 6px; padding: 0 16px; font-size: 14px; font-weight: 600; cursor: ' + (chosen ? 'pointer' : 'not-allowed') + '; color: ' + (chosen ? '#FFFFFF' : '#5B6470') + '; background: ' + (chosen ? CONFIRM_BG[chosen.key] : '#E3E6EB'),
+      confirmDecision: () => { if (chosen) this.setState({ step: 'remarks', decision: chosen.key, menuOpen: false, choice: null, remarks: '' }); },
+      recorded: s.recorded || false,
+      undoDecision: () => this.setState({ recorded: null }),
+      isScope: tab === 'scope', isSnap: tab === 'snapshot', isEv: tab === 'evidence', isToc: tab === 'contents',
+      openPanel: () => this.setState({ open: true }),
+      closePanel: () => this.setState({ open: false }),
+      bdOpen,
+      evTotal: '13',
+      filters, groups, hl, findings,
+      highlights: s.highlights ? 'true' : 'false',
+      hlTrack: s.highlights ? '#1D3FCF' : '#B7BEC8',
+      hlKnob: s.highlights ? 'flex-end' : 'flex-start',
+      toggleHighlights: () => this.setState({ highlights: !s.highlights }),
+      activeLabel: activeItem ? activeItem.label : (s.active === 'rp' ? 'Research problem' : false),
+      clearActive: () => this.setState({ active: null }),
+      locateRp: () => this.setState({ active: 'rp' }),
+      rpStyle: s.rpOpen
+        ? 'margin: 0; font-family: \'Source Serif 4\',Georgia,serif; font-size: 14px; line-height: 1.6'
+        : 'margin: 0; font-family: \'Source Serif 4\',Georgia,serif; font-size: 14px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden',
+      rpToggleLabel: s.rpOpen ? 'Show less' : 'Show full passage',
+      toggleRp: () => this.setState({ rpOpen: !s.rpOpen }),
+      sections: [
+        { label: 'Abstract', href: '#ms-abstract', ev: false },
+        { label: 'Introduction', href: '#ms-intro', ev: '1 passage' },
+        { label: 'Results and discussion', href: '#ms-results', ev: '12 passages' }
+      ],
+      figures: [
+        { id: 'Chart 1', caption: 'Few important drug molecules containing N-alkylated amide', warn: false },
+        { id: 'Scheme 1', caption: 'Synthesis of bis(3,5-dimethylpyrazolyl)methane (bpm)', warn: false },
+        { id: 'Scheme 2', caption: 'Synthesis of [(η6-p-cymene)Ru(bpm)Cl]+[PF6] (1)', warn: false },
+        { id: 'Table 1', caption: '[Not found by extraction — cited in text as Entries 1–3]', warn: 'Missing from extracted list' },
+        { id: 'Table 2', caption: 'Effect of solvent on 1 catalyzed reaction of benzamide (2a) with benzyl alcohol (3a)', warn: false },
+        { id: 'Table 2', caption: 'Effect of base on 1 catalyzed reaction of benzamide (2a) with benzyl alcohol (3a)', warn: 'Duplicate number — likely Table 3' },
+        { id: 'Table 4', caption: 'N-Alkylation of benzamides (2) with alcohols (3) catalysed by 1', warn: false },
+        { id: 'Scheme 3', caption: 'Synthesis of Tigan', warn: false },
+        { id: 'Scheme 4', caption: 'Control reaction', warn: false }
+      ]
+    };
+  }
+
+
+  issuesData() {
+    return [
+      { id: 'i1', cat: 'Authorship', check: 'No ORCID iD linked', subject: 'Tapas Mahata', found: 'No ORCID iD is linked to this author in the submission metadata.', why: 'The journal requires an ORCID iD for every author, so authorship can be verified.', ask: 'Please add an ORCID iD for Tapas Mahata to the submission record.' },
+      { id: 'i2', cat: 'Authorship', check: 'Affiliation mismatch', subject: 'Manish Bhattacharjee (corresponding author)', found: 'The affiliation in the manuscript (Department of Chemistry, IIT Kharagpur) differs from the submission metadata: [metadata affiliation].', why: 'Mismatched affiliations can indicate an unverified or outdated author record.', ask: 'Please confirm the correct affiliation for Manish Bhattacharjee and update the manuscript or the submission metadata so that they match.' },
+      { id: 'i3', cat: 'Data', check: 'Data availability statement missing', subject: 'Manuscript', found: 'No data availability statement was found in the manuscript.', why: 'Required by the journal\u2019s data policy before peer review.', ask: 'Please add a data availability statement explaining where the data supporting the findings can be accessed.' }
+    ];
+  }
+
+  buildQuery(flagged) {
+    const T = 'N-Alkylation of Amides with Benzylic Alcohols Catalyzed by a Cationic Ruthenium(II) Complex';
+    const J = 'ABC Journal of Inorganic Chemistry';
+    const list = (xs) => xs.length ? xs.map((x) => '\u2022 ' + x).join('\n') : '\u2022 [No integrity concerns are flagged. Add the points you need clarified.]';
+    const body = 'Dear Dr Bhattacharjee,\n\nThank you for submitting \u201c' + T + '\u201d to ' + J + '.\n\n' +
+      'Following our initial editorial assessment, we identified ' + (flagged.length === 1 ? 'an integrity or policy matter that requires' : 'integrity or policy matters that require') + ' clarification before we can determine whether the manuscript should proceed to external peer review.\n\n' +
+      'Our assessment found that:\n' + list(flagged.map((i) => i.check + ': ' + i.found)) + '\n\n' +
+      'In particular, please address the following:\n' + list(flagged.map((i) => i.ask)) + '\n\n' +
+      'Please provide a point-by-point response and, where necessary, submit a revised version of the manuscript.\n\n' +
+      'The identification of ' + (flagged.length === 1 ? 'this concern does' : 'these concerns do') + ' not constitute a finding of research misconduct. Automated screening results, where applicable, were used only as supporting information. The manuscript will not proceed to external peer review until the matter has been assessed following your response.\n\n' +
+      'After considering the clarification and any revised material provided, the editor will determine the appropriate next step.\n\nThank you for your cooperation.\n\nYours sincerely,\n[Editor Name]\n[Editor Role]\n' + J;
+    return { subject: 'Decision on Manuscript JO-2026-01178Z-20260518041038: Clarification Required', body };
+  }
+
+  igVals() {
+    const s = this.state.ig;
+    const ISSUES = this.issuesData();
+    const un = s.unflagged;
+    const flagged = ISSUES.filter((i) => !un[i.id]);
+    const f = s.filter;
+    const pill = (bg, ink, line) => 'font-size: 12px; font-weight: 600; border-radius: 999px; padding: 4px 12px; white-space: nowrap; background: ' + bg + '; color: ' + ink + '; border: 1px solid ' + line;
+
+    const issues = ISSUES.map((i) => {
+      const off = !!un[i.id];
+      const open = !!s.open[i.id];
+      return Object.assign({}, i, {
+        open, expanded: open ? 'true' : 'false',
+        chevron: open ? 'm6 15 6-6 6 6' : 'm6 9 6 6 6-6',
+        toggle: () => this.setIg({ open: Object.assign({}, s.open, { [i.id]: !open }) }),
+        status: off ? 'Unflagged' : 'Flagged',
+        statusStyle: off ? pill('#EEF1F5', '#3A424C', '#D5DAE1') : pill('#FDEDEC', '#A1180F', '#F0B8B4'),
+        cardStyle: 'background: ' + (off ? '#FAFBFC' : '#FFFFFF') + '; border-radius: 10px; border: 1px solid ' + (off ? '#E3E6EB' : '#F0B8B4') + '; border-left: 4px solid ' + (off ? '#C9CED6' : '#C4201A'),
+        textInk: off ? '#5B6470' : '#1B1F24',
+        unflagged: off,
+        unflagPressed: off ? 'true' : 'false',
+        flagBtnLabel: off ? 'Flag again' : 'Unflag — not a concern',
+        flagHint: off ? 'Removed from any author query.' : 'Included in any author query.',
+        flagBtnStyle: 'height: 36px; border-radius: 6px; padding: 0 14px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #D5DAE1; background: #FFFFFF; color: #1B1F24',
+        toggleFlag: () => this.setIg({ unflagged: Object.assign({}, un, { [i.id]: !off }) })
+      });
+    });
+
+    const F = [
+      { key: 'attention', label: 'Flagged', count: flagged.length },
+      { key: 'passed', label: 'Passed', count: 59 },
+      { key: 'all', label: 'All', count: 62 }
+    ];
+    const filters = F.map((x) => {
+      const on = f === x.key;
+      return Object.assign({}, x, {
+        pressed: on ? 'true' : 'false',
+        pick: () => this.setIg({ filter: x.key }),
+        style: 'height: 36px; border-radius: 999px; padding: 0 14px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; border: 1px solid ' + (on ? '#1D3FCF' : '#D5DAE1') + '; background: ' + (on ? '#1D3FCF' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#1B1F24'),
+        countStyle: 'font-weight: 500; opacity: ' + (on ? '0.85' : '0.7')
+      });
+    });
+
+    const nUn = ISSUES.length - flagged.length;
+    return {
+      headline: flagged.length ? flagged.length + ' integrity ' + (flagged.length === 1 ? 'concern' : 'concerns') + ' flagged' : 'No integrity concerns flagged',
+      subline: 'For your information. Flagged concerns go into any author query automatically; unflag any that aren\u2019t a concern. 59 passed checks are hidden.',
+      progress: [
+        { label: flagged.length + ' flagged', style: pill(flagged.length ? '#FDEDEC' : '#EEF1F5', flagged.length ? '#A1180F' : '#3A424C', flagged.length ? '#F0B8B4' : '#D5DAE1') },
+        { label: nUn + ' unflagged', style: pill('#EEF1F5', '#3A424C', '#D5DAE1') }
+      ],
+      filters, issues,
+      showIssues: f === 'attention' || f === 'all',
+      showPassed: f === 'passed' || f === 'all',
+      showHiddenHints: f === 'attention',
+      showPass: () => this.setIg({ filter: 'passed' }),
+      passed: [
+        { cat: 'Citation', text: '[1.] Catalytic amide formation from non-activated carboxylic acids and amines' },
+        { cat: 'Image', text: 'Image integrity processing completed; no manipulation detected.' },
+        { cat: 'Authorship', text: 'Corresponding author email domain matches the stated institution.' }
+      ],
+      footerNote: flagged.length ? flagged.length + ' flagged ' + (flagged.length === 1 ? 'concern' : 'concerns') + ' will be included if you query the author.' : 'No concerns will be included in an author query.',
+      openQuery: () => { const q = this.buildQuery(flagged); this.setIg({ queryOpen: true, sent: false, qSubject: q.subject, qBody: q.body }); },
+      closeQuery: () => this.setIg({ queryOpen: false, sent: false }),
+      sendQuery: () => this.setIg({ sent: true }),
+      queryOpen: s.queryOpen, querySent: s.queryOpen && s.sent, queryDraft: s.queryOpen && !s.sent,
+      includedNote: flagged.length
+        ? 'Includes ' + flagged.length + ' flagged ' + (flagged.length === 1 ? 'concern' : 'concerns') + ': ' + flagged.map((i) => i.check).join(', ') + '.' + (nUn ? ' ' + nUn + ' unflagged ' + (nUn === 1 ? 'concern was' : 'concerns were') + ' left out.' : '')
+        : 'No flagged concerns — add the points you need clarified.',
+      msOpen: s.msOpen,
+      msOpenStr: s.msOpen ? 'true' : 'false',
+      msLabel: s.msOpen ? 'Hide Manuscript' : 'View Manuscript',
+      toggleMs: () => this.setIg({ msOpen: !s.msOpen }),
+      qSubject: s.qSubject, qBody: s.qBody,
+      onQSubject: (e) => this.setIg({ qSubject: e.target.value }),
+      onQBody: (e) => this.setIg({ qBody: e.target.value })
+    };
+  }
+
+  setIg(p) { this.setState({ ig: Object.assign({}, this.state.ig, p) }); }
+
+  renderVals() {
+    const v = this.mainVals();
+    const st = this.state;
+    const sc = st.screen;
+    const goTasks = () => {
+      let outcome = st.outcome;
+      if (st.step === 'done') outcome = st.decision;
+      if (st.ig.queryOpen && st.ig.sent) outcome = 'query';
+      this.setState({ screen: 'tasks', outcome, step: null, menuOpen: false, ig: Object.assign({}, st.ig, { queryOpen: false, msOpen: false }) });
+    };
+    const STATUS = {
+      accept: ['Sent to peer review', '#17603C', '#E6F4EC', '#B9DEC9'],
+      reject: ['Rejected', '#A1180F', '#FDEDEC', '#F0B8B4'],
+      reassign: ['Reassigned', '#3A424C', '#EEF1F5', '#D5DAE1'],
+      query: ['Awaiting author', '#7A4A00', '#FDF4E3', '#EBCB93']
+    };
+    const ts = STATUS[st.outcome] || ['Awaiting review', '#0B5C8A', '#E6F2FA', '#BCDCEF'];
+    return Object.assign(v, {
+      ig: this.igVals(),
+      isTasks: sc === 'tasks', isIntegrity: sc === 'integrity', isAssessment: sc === 'assessment',
+      goTasks,
+      goIntegrity: () => this.setState({ screen: 'integrity', step: null, menuOpen: false }),
+      goAssessment: () => this.setState({ screen: 'assessment', ig: Object.assign({}, st.ig, { queryOpen: false, msOpen: false }) }),
+      taskStatus: ts[0],
+      taskStatusStyle: 'font-size: 13px; font-weight: 600; border-radius: 6px; padding: 3px 10px; color: ' + ts[1] + '; background: ' + ts[2] + '; border: 1px solid ' + ts[3]
+    });
+  }
+}
+</script>
+</body>
+</html>
